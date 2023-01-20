@@ -1,12 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity()
-export class User {
+export class Student {
   @PrimaryGeneratedColumn("uuid")
   id: number
-
-  @Column()
-  role: 0 | 1 | 2
 
   @Column({
     length: 20,
@@ -42,4 +39,10 @@ export class User {
     nullable: true
   })
   avatar: string
+
+  @Column()
+  teacherId: number
+
+  @Column()
+  createTime: string
 }

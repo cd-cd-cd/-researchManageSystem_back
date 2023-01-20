@@ -1,14 +1,42 @@
 import Router from "@koa/router"
+import ManagerController from "./controllers/manager"
 
-import AuthController from "./controllers/auth"
+import TeacherController from "./controllers/teacher"
 import UserController from "./controllers/user"
 
 const unProtectedRouter = new Router()
-unProtectedRouter.post('/auth/login', AuthController.login)
+/*
+user.ts
+ */
+// 创建管理员
+unProtectedRouter.post('/createManager', UserController.createManager)
+// 登录
+unProtectedRouter.post('/user/login', UserController.login)
 
 const protectedRouter = new Router()
-protectedRouter.post('/auth/register', AuthController.createStu)
-protectedRouter.get('/user/:id', UserController.showUserDetail)
+protectedRouter.get('/user', UserController.showUserDetail)
+
+/*
+student.ts
+ */
+
+
+/*
+teacher.ts
+ */
+// 老师创建学生
+protectedRouter.post('/teacher/createStu', TeacherController.createStu)
+protectedRouter.post('/teacher/updatePhone', TeacherController.updatePhone)
+protectedRouter.post('/teacher/updateEmail', TeacherController.updateEmail)
+protectedRouter.post('/teacher/updateResume', TeacherController.updateResume)
+
+
+/*
+manager.ts
+ */
+
+// 管理员创建老师
+protectedRouter.post('/manager/createTeacher', ManagerController.createTeacher)
 
 export {
   unProtectedRouter,

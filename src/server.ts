@@ -1,6 +1,7 @@
 import Koa from 'koa'
 import cors from '@koa/cors'
 import bodyParser from 'koa-bodyparser'
+import bouncer from 'koa-bouncer'
 import { logger } from './logger'
 import { unProtectedRouter, protectedRouter } from './routes'
 import { createConnection } from 'typeorm'
@@ -15,6 +16,7 @@ createConnection()
     app.use(logger())
     app.use(cors())
     app.use(bodyParser())
+    app.use(bouncer.middleware())
 
     // 错误中间件
     app.use(async (ctx, next) => {
