@@ -33,7 +33,8 @@ protectedRouter.post('/teacher/updateResume', TeacherController.updateResume)
 protectedRouter.post('/teacher/updateAvatar', TeacherController.updateAvatar)
 // 获得学生列表
 protectedRouter.get('/teacher/stuList', TeacherController.stuList)
-
+// 获得学生详细信息
+protectedRouter.get('/teacher/getStuDetail', TeacherController.stuDetail)
 
 /*
 manager.ts

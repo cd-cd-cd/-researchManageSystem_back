@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 import { User } from '../entity/user'
-import { getManager } from 'typeorm'
+import { getManager, Tree } from 'typeorm'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { NotFoundException, UnauthorizedException } from '../exceptions'
@@ -130,6 +130,30 @@ export default class TeacherController {
       },
       msg: '学生列表获取成功',
       success: true
+    }
+  }
+
+  // 得到学生详细信息
+  public static async stuDetail(ctx: Context) {
+    const { id } = ctx.query
+    const repository = getManager().getRepository(Student)
+    const user = await repository.findOne({ id })
+    if (user) {
+      ctx.status = 200
+      ctx.body = {
+        status: 10011,
+        data: user,
+        msg: '学生信息获取成功',
+        success: true
+      }
+    } else {
+      ctx.status = 200
+      ctx.body = {
+        status: 10012,
+        data: '',
+        msg: '没有该学生信息',
+        success: false
+      }
     }
   }
 } 
