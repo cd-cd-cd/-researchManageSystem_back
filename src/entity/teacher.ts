@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
 
 @Entity()
 export class Teacher {
@@ -35,11 +35,9 @@ export class Teacher {
   })
   resume: string
 
-  @Column({
-    nullable: true
-  })
+  @Column()
   avatar: string
 
-  @Column()
-  createTime: string
+  @CreateDateColumn()
+  createdTime: Date;
 }

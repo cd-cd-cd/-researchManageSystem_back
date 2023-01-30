@@ -5,7 +5,7 @@ import bouncer from 'koa-bouncer'
 import { logger } from './logger'
 import { unProtectedRouter, protectedRouter } from './routes'
 import { createConnection } from 'typeorm'
-import 'reflect-metadata'
+import jwt from 'koa-jwt'
 
 createConnection()
   .then(() => {
@@ -30,7 +30,7 @@ createConnection()
 
     // 响应用户请求
     app.use(unProtectedRouter.routes()).use(unProtectedRouter.allowedMethods())
-    // app.use(jwt({ secret: process.env.JWT_SECRET as string }))
+    app.use(jwt({ secret: process.env.JWT_SECRET as string, key: 'user' }))
     app.use(protectedRouter.routes()).use(protectedRouter.allowedMethods())
 
     // 运行服务器

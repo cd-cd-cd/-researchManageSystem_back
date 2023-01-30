@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
 
 @Entity()
 export class Student {
@@ -41,8 +41,8 @@ export class Student {
   avatar: string
 
   @Column()
-  teacherId: number
+  teacherId: string
 
-  @Column()
-  createTime: string
+  @CreateDateColumn()
+  createdTime: Date
 }

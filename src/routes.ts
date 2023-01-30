@@ -26,9 +26,13 @@ teacher.ts
  */
 // 老师创建学生
 protectedRouter.post('/teacher/createStu', TeacherController.createStu)
+// 老师信息修改
 protectedRouter.post('/teacher/updatePhone', TeacherController.updatePhone)
 protectedRouter.post('/teacher/updateEmail', TeacherController.updateEmail)
 protectedRouter.post('/teacher/updateResume', TeacherController.updateResume)
+protectedRouter.post('/teacher/updateAvatar', TeacherController.updateAvatar)
+// 获得学生列表
+protectedRouter.get('/teacher/stuList', TeacherController.stuList)
 
 
 /*

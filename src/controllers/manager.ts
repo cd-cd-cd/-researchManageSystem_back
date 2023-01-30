@@ -8,11 +8,11 @@ export default class ManagerController {
   public static async createTeacher (ctx: Context) {
     const repository = getManager().getRepository(Teacher)
     const newUser = new Teacher()
-    const { username, name, createTime } = ctx.request.body
+    const { username, name } = ctx.request.body
     newUser.username = username
     newUser.name = name
-    newUser.createTime = createTime
-    newUser.password = bcrypt.hashSync(username.slice(-6))
+    const salt = bcrypt.genSaltSync(10)
+    newUser.password = bcrypt.hashSync(username.slice(-6), salt)
     const isExit = await repository.findOne({ username: username })
     if (!isExit) {
       const user = await repository.save(newUser)
