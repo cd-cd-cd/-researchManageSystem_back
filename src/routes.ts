@@ -35,7 +35,8 @@ protectedRouter.post('/teacher/updateAvatar', TeacherController.updateAvatar)
 protectedRouter.get('/teacher/stuList', TeacherController.stuList)
 // 获得学生详细信息
 protectedRouter.get('/teacher/getStuDetail', TeacherController.stuDetail)
-
+// 老师删除学生
+protectedRouter.delete('/teacher/deleteStu', TeacherController.deleteStu)
 /*
 manager.ts
  */

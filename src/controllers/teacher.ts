@@ -21,6 +21,7 @@ export default class TeacherController {
     newUser.teacherId = teacherId
     newUser.username = username
     newUser.name = name
+    newUser.avatar = 'https://pic4.zhimg.com/80/v2-4f8cf572d51e43d9b9f27f2f51f51921_xl.jpg'
     newUser.password = bcrypt.hashSync(username.slice(-6))
     const isExit = await userRepository.findOne({ username: username })
     if (!isExit) {
@@ -115,6 +116,7 @@ export default class TeacherController {
     const total = await repository.count({ teacherId: id })
     const students = await repository.createQueryBuilder()
     .where({ teacherId: id })
+    .orderBy('createdTime', 'DESC')
     .offset(offset)
     .limit(pageSize * 1)
     .getMany()
@@ -154,6 +156,20 @@ export default class TeacherController {
         msg: '没有该学生信息',
         success: false
       }
+    }
+  }
+
+  // 老师删除学生
+  public static async deleteStu(ctx: Context) {
+    const { id } = ctx.request.body
+    const repository = getManager().getRepository(Student)
+    await repository.delete({ id })
+    ctx.status = 200
+    ctx.body = {
+      status: 10101,
+      data: '',
+      msg: '删除成功',
+      success: true
     }
   }
 } 
