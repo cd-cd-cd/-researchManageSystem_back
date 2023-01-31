@@ -3,10 +3,11 @@ import { User } from '../entity/user'
 import { getManager, Tree } from 'typeorm'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { NotFoundException, UnauthorizedException } from '../exceptions'
+import { NotFoundException, UnauthorizedException, ValidationException } from '../exceptions'
 import { Student } from '../entity/student'
 import { Teacher } from '../entity/teacher'
-import { phoneValidator, emailValidator, resumeValidator, usernameValidator, nameValidator } from '../validators/info'
+import bouncer from 'koa-bouncer'
+import { phoneValidator, emailValidator, resumeValidator, usernameValidator, nameValidator, passwordValidator } from '../validators/info'
 export default class TeacherController {
 
   // 老师创建学生
@@ -47,46 +48,79 @@ export default class TeacherController {
   // 修改联系电话、邮箱、个人简介
   public static async updatePhone(ctx: Context) {
     phoneValidator(ctx)
-    const { phoneNumber, id } = ctx.request.body
+    const { id } = ctx.state.user
+    const { phoneNumber } = ctx.request.body
     const repository = getManager().getRepository(Teacher)
     await repository.update({ id }, { phoneNumber })
     const user = await repository.findOne({ id })
     if (user) {
       ctx.status = 200
-      ctx.body = '电话修改成功'
+      ctx.body = {
+        status: 10102,
+        msg: '电话修改成功',
+        data: '',
+        success: true
+      }
     } else {
       ctx.status = 400
-      ctx.body = '电话修改失败'
+      ctx.body = {
+        status: 10103,
+        msg: '电话修改失败',
+        data: '',
+        success: false
+      }
     }
   }
 
   public static async updateEmail(ctx: Context) {
     emailValidator(ctx)
-    const { email, id } = ctx.request.body
+    const { id } = ctx.state.user
+    const { email } = ctx.request.body
     const repository = getManager().getRepository(Teacher)
     await repository.update({ id }, { email })
     const user = await repository.findOne({ id })
     if (user) {
       ctx.status = 200
-      ctx.body = '邮箱修改成功'
+      ctx.body = {
+        status: 10104,
+        msg: '邮箱修改成功',
+        data: '',
+        success: true
+      }
     } else {
       ctx.status = 400
-      ctx.body = '邮箱修改失败'
+      ctx.body = {
+        status: 10105,
+        msg: '邮箱修改失败',
+        data: '',
+        success: false
+      }
     }
   }
 
   public static async updateResume(ctx: Context) {
     resumeValidator(ctx)
-    const { resume, id } = ctx.request.body
+    const { id } = ctx.state.user
+    const { resume } = ctx.request.body
     const repository = getManager().getRepository(Teacher)
     await repository.update({ id }, { resume })
     const user = await repository.findOne({ id })
     if (user) {
       ctx.status = 200
-      ctx.body = '简介修改成功'
+      ctx.body = {
+        status: 10106,
+        msg: '简介修改成功',
+        data: '',
+        success: true
+      }
     } else {
       ctx.status = 400
-      ctx.body = '简介修改失败'
+      ctx.body = {
+        status: 10107,
+        msg: '简介修改失败',
+        data: '',
+        success: false
+      }
     }
   }
 
@@ -115,11 +149,11 @@ export default class TeacherController {
     const repository = getManager().getRepository(Student)
     const total = await repository.count({ teacherId: id })
     const students = await repository.createQueryBuilder()
-    .where({ teacherId: id })
-    .orderBy('createdTime', 'DESC')
-    .offset(offset)
-    .limit(pageSize * 1)
-    .getMany()
+      .where({ teacherId: id })
+      .orderBy('createdTime', 'DESC')
+      .offset(offset)
+      .limit(pageSize * 1)
+      .getMany()
     console.log(students, 'students')
     ctx.status = 200
     ctx.body = {
@@ -170,6 +204,39 @@ export default class TeacherController {
       data: '',
       msg: '删除成功',
       success: true
+    }
+  }
+
+  // 老师修改密码
+  public static async changePassword(ctx: Context) {
+    try {
+      passwordValidator(ctx)
+    } catch (error) {
+      if (error instanceof bouncer.ValidationError) {
+        throw new ValidationException(error.message)
+      }
+    }
+    const { id } = ctx.state.user
+    const { oldPassword, newPassword } = ctx.request.body
+    const repository = getManager().getRepository(Teacher)
+    const user = await repository
+      .createQueryBuilder()
+      .where({ id })
+      .addSelect('Teacher.password')
+      .getOne()
+    if (!user) {
+      throw new UnauthorizedException('用户名不存在')
+    } else if (bcrypt.compareSync(oldPassword, user!.password)) {
+      await repository.update({ id }, { password: bcrypt.hashSync(newPassword) })
+      ctx.status = 200
+      ctx.body = {
+        status: 10108,
+        data: '',
+        msg: '密码修改成功',
+        success: true
+      }
+    } else {
+      throw new UnauthorizedException('原密码错误')
     }
   }
 } 

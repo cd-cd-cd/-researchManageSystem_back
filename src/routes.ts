@@ -37,6 +37,8 @@ protectedRouter.get('/teacher/stuList', TeacherController.stuList)
 protectedRouter.get('/teacher/getStuDetail', TeacherController.stuDetail)
 // 老师删除学生
 protectedRouter.delete('/teacher/deleteStu', TeacherController.deleteStu)
+// 老师修改密码
+protectedRouter.put('/teacher/passwordChange', TeacherController.changePassword)
 /*
 manager.ts
  */

@@ -3,7 +3,7 @@ import { Context } from 'koa'
 // 验证电话号
 export const phoneValidator = (ctx: Context) => {
   ctx.validateBody('phoneNumber')
-  .required('密码不为空')
+  .required('电话不为空')
   .trim()
   .match(/^[1][3,4,5,7,8][0-9]{9}$/, '手机格式有误')
 }
@@ -37,4 +37,12 @@ export const nameValidator = (ctx: Context) => {
   .trim()
   .match(/^([\u4e00-\u9fa5]{2,20}|[a-zA-Z.\s]{2,20})$/, '姓名不合法')
   .isLength(0, 20, '姓名长度不超过20')
+}
+
+// 检查密码
+export const passwordValidator = (ctx: Context) => {
+  ctx.validateBody('newPassword')
+  .trim()
+  .match(/^[a-zA-Z0-9]{6,16}$/, '新密码应为6-16位，字母或数字组合')
+  .isLength(6, 16, '长度为6-16')
 }

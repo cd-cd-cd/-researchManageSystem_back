@@ -29,3 +29,12 @@ export class ForbiddenException extends BaseException {
     this.message = msg || '权限不足'
   }
 }
+
+export class ValidationException extends BaseException {
+  status = 400
+
+  constructor(msg?: string) {
+    super()
+    this.message = msg || '检验失败'
+  }
+}
