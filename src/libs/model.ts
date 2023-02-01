@@ -1,6 +1,6 @@
-export type IRole = 0 | 1 | 2
+type IRole = 0 | 1 | 2
 // token的个人信息
-export interface IUser {
+interface IUser {
   id: string
   username: string
   name: string
@@ -10,4 +10,13 @@ export interface IUser {
   avatar?: string
   createdTime?: Date
   role: IRole
+}
+
+// -1 -- 损坏 0 -- 闲置 1 -- 在用
+type IEquipmentState = -1 | 0 | 1
+
+export type {
+  IRole,
+  IUser,
+  IEquipmentState
 }

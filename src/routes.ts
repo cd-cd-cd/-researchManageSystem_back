@@ -1,7 +1,7 @@
 import Router from "@koa/router"
 import ManagerController from "./controllers/manager"
-
-import TeacherController from "./controllers/teacher"
+import DeviceController from "./controllers/teacherControllers/device"
+import TeacherController from "./controllers/teacherControllers/teacher"
 import UserController from "./controllers/user"
 
 const unProtectedRouter = new Router()
@@ -39,6 +39,11 @@ protectedRouter.get('/teacher/getStuDetail', TeacherController.stuDetail)
 protectedRouter.delete('/teacher/deleteStu', TeacherController.deleteStu)
 // 老师修改密码
 protectedRouter.put('/teacher/passwordChange', TeacherController.changePassword)
+
+/*设备管理*/
+// 老师添加设备
+protectedRouter.post('/teacher/device/addEquipment', DeviceController.addEquipment)
+protectedRouter.get('/teacher/device/getDeviceList', DeviceController.equipmentList)
 /*
 manager.ts
  */

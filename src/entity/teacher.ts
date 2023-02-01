@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeor
 @Entity()
 export class Teacher {
   @PrimaryGeneratedColumn("uuid")
-  id: number
+  id: string
 
   @Column({
     length: 20,

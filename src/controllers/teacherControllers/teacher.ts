@@ -1,13 +1,11 @@
 import { Context } from 'koa'
-import { User } from '../entity/user'
-import { getManager, Tree } from 'typeorm'
+import { getManager } from 'typeorm'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { NotFoundException, UnauthorizedException, ValidationException } from '../exceptions'
-import { Student } from '../entity/student'
-import { Teacher } from '../entity/teacher'
+import { UnauthorizedException, ValidationException } from '../../exceptions'
+import { Student } from '../../entity/student'
+import { Teacher } from '../../entity/teacher'
 import bouncer from 'koa-bouncer'
-import { phoneValidator, emailValidator, resumeValidator, usernameValidator, nameValidator, passwordValidator } from '../validators/info'
+import { phoneValidator, emailValidator, resumeValidator, usernameValidator, nameValidator, passwordValidator } from '../../validators/info'
 export default class TeacherController {
 
   // 老师创建学生
@@ -15,7 +13,6 @@ export default class TeacherController {
     usernameValidator(ctx)
     nameValidator(ctx)
     const { id: teacherId } = ctx.state.user
-    console.log(teacherId, 'teacherid')
     const userRepository = getManager().getRepository(Student)
     const newUser = new Student()
     const { username, name } = ctx.request.body
@@ -26,7 +23,7 @@ export default class TeacherController {
     newUser.password = bcrypt.hashSync(username.slice(-6))
     const isExit = await userRepository.findOne({ username: username })
     if (!isExit) {
-      const user = await userRepository.save(newUser)
+      await userRepository.save(newUser)
       ctx.status = 200
       ctx.body = {
         status: 10004,
@@ -154,7 +151,6 @@ export default class TeacherController {
       .offset(offset)
       .limit(pageSize * 1)
       .getMany()
-    console.log(students, 'students')
     ctx.status = 200
     ctx.body = {
       status: 10100,
