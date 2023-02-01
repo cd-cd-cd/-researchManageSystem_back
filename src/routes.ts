@@ -49,6 +49,12 @@ protectedRouter.get('/teacher/device/getDeviceList', DeviceController.equipmentL
 protectedRouter.put('/teacher/device/update', DeviceController.changeDeviceInfo)
 // 更新设备状态
 protectedRouter.put('/teacher/device/updateState', DeviceController.toggleState)
+// 得到学生列表
+protectedRouter.get('/teacher/decive/getStudentList', DeviceController.getStudentList)
+// 指派设备
+protectedRouter.put('/teacher/device/chooseStu', DeviceController.chooseStu)
+// 设备回收
+protectedRouter.put('/teacher/device/recovery', DeviceController.recoveryDevice)
 /*
 manager.ts
  */

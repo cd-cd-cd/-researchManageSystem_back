@@ -5,6 +5,7 @@ import bouncer from 'koa-bouncer'
 import dayjs from "dayjs"
 import { getManager } from "typeorm"
 import { Equipment } from "../../entity/equipment"
+import { Student } from "../../entity/student"
 export default class DeviceController {
   // 老师添加设备
   public static async addEquipment(ctx: Context) {
@@ -69,12 +70,28 @@ export default class DeviceController {
     const offset = (pageNum - 1) * pageSize
     const repository = getManager().getRepository(Equipment)
     const total = await repository.count({ teacherId })
-    const lists = await repository.createQueryBuilder()
+    const lists = await repository.createQueryBuilder('equipment')
+      .leftJoinAndSelect(Student, 'stu', 'stu.id = equipment.recipient')
       .where({ teacherId })
+      .select([
+      'equipment.id as id',
+      'equipment.serialNumber as serialNumber',
+      'equipment.name as name',
+      'equipment.version as version',
+      'equipment.originalValue as originalValue',
+      'equipment.performanceIndex as performanceIndex',
+      'equipment.address as address',
+      'equipment.state as state',
+      'equipment.warehouseEntryTime as warehouseEntryTime',
+      'stu.name as recipient',
+      'equipment.HostRemarks as HostRemarks',
+      'equipment.remark as remark',
+      'equipment.createdTime as createdTime'
+      ])
       .orderBy('createdTime', 'DESC')
       .offset(offset)
       .limit(pageSize * 1)
-      .getMany()
+      .getRawMany()
     ctx.status = 200
     ctx.body = {
       status: 10112,
@@ -145,6 +162,51 @@ export default class DeviceController {
       status: 10114,
       data: '',
       msg: '状态更新成功',
+      success: true
+    }
+  }
+
+  // 老师得到学生们id列表
+  public static async getStudentList(ctx: Context) {
+    const { id: teacherId } = ctx.state.user
+    const repository = getManager().getRepository(Student)
+    const students = await repository.createQueryBuilder('student')
+      .where({ teacherId })
+      .select(['student.id', 'student.name', 'student.username'])
+      .getMany()
+    ctx.status = 200
+    ctx.body = {
+      status: 10115,
+      data: students,
+      msg: '',
+      success: true
+    }
+  }
+
+  // 选择指派人
+  public static async chooseStu(ctx: Context) {
+    const { recipient, serialNumber } = ctx.request.body
+    const repository = getManager().getRepository(Equipment)
+    await repository.update({ serialNumber }, { recipient, state: 1 })
+    ctx.status = 200
+    ctx.body = {
+      status: 10116,
+      data: '',
+      msg: '设备指派成功',
+      success: true
+    }
+  }
+
+  // 回收设备
+  public static async recoveryDevice(ctx: Context) {
+    const { serialNumber } = ctx.request.body
+    const repository = getManager().getRepository(Equipment)
+    await repository.update({ serialNumber }, { recipient: '', state: 0 })
+    ctx.status = 200
+    ctx.body = {
+      status: 10117,
+      data: '',
+      msg: '设备回收成功',
       success: true
     }
   }
