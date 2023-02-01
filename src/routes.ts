@@ -43,7 +43,10 @@ protectedRouter.put('/teacher/passwordChange', TeacherController.changePassword)
 /*设备管理*/
 // 老师添加设备
 protectedRouter.post('/teacher/device/addEquipment', DeviceController.addEquipment)
+// 获得设备列表
 protectedRouter.get('/teacher/device/getDeviceList', DeviceController.equipmentList)
+// 修改设备信息
+protectedRouter.put('/teacher/device/update', DeviceController.changeDeviceInfo)
 /*
 manager.ts
  */
