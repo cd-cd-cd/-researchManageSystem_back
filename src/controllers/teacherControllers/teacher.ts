@@ -235,4 +235,4 @@ export default class TeacherController {
       throw new UnauthorizedException('原密码错误')
     }
   }
-} 
+}

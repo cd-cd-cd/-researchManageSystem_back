@@ -130,4 +130,22 @@ export default class DeviceController {
       success: true
     }
   }
+
+  // 老师修改设备状态
+  public static async toggleState(ctx: Context) {
+    const { id, state } = ctx.request.body
+    const repository = getManager().getRepository(Equipment)
+    if (state === -1) {
+      await repository.update({ id }, { state: 0 })
+    } else if (state === 0) {
+      await repository.update({ id }, { state: -1 })
+    }
+    ctx.status = 200
+    ctx.body = {
+      status: 10114,
+      data: '',
+      msg: '状态更新成功',
+      success: true
+    }
+  }
 }

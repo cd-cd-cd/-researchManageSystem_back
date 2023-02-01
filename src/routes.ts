@@ -47,6 +47,8 @@ protectedRouter.post('/teacher/device/addEquipment', DeviceController.addEquipme
 protectedRouter.get('/teacher/device/getDeviceList', DeviceController.equipmentList)
 // 修改设备信息
 protectedRouter.put('/teacher/device/update', DeviceController.changeDeviceInfo)
+// 更新设备状态
+protectedRouter.put('/teacher/device/updateState', DeviceController.toggleState)
 /*
 manager.ts
  */
