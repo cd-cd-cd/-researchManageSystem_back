@@ -1,5 +1,6 @@
 import Router from "@koa/router"
 import ManagerController from "./controllers/manager"
+import StuDeviceController from "./controllers/studentControllers/device"
 import StudentController from "./controllers/studentControllers/student"
 import DeviceController from "./controllers/teacherControllers/device"
 import TeacherController from "./controllers/teacherControllers/teacher"
@@ -23,7 +24,12 @@ student.ts
 /*个人信息 */
 // 学生修改个人信息
 protectedRouter.put('/student/updateInfo', StudentController.updatePersonalInfo)
-
+protectedRouter.put('/student/changePassword', StudentController.changePassword)
+/*设备管理 */
+// 得到闲置数据
+protectedRouter.get('/student/device/getIdleDevice', StuDeviceController.idleDevice)
+// 申请设备
+protectedRouter.post('/student/device/apply', StuDeviceController.applyDevice)
 /*
 teacher.ts
  */

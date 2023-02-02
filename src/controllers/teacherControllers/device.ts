@@ -16,7 +16,8 @@ export default class DeviceController {
         throw new ValidationException(error.message)
       }
     }
-    const { id: teacherId } = ctx.state.user
+    // const { id: teacherId } = ctx.state.user
+    const { id: teacher } = ctx.state.user
     const {
       serialNumber,
       name,
@@ -40,7 +41,8 @@ export default class DeviceController {
     equipment.warehouseEntryTime = newTime
     equipment.HostRemarks = HostRemarks
     equipment.remark = remark
-    equipment.teacherId = teacherId
+    // equipment.teacherId = teacherId
+    equipment.teacher = teacher
     const repository = getManager().getRepository(Equipment)
     const isExit = await repository.findOne({ serialNumber })
     if (!isExit) {
@@ -65,14 +67,17 @@ export default class DeviceController {
 
   // 老师获取设备信息
   public static async equipmentList(ctx: Context) {
-    const { id: teacherId } = ctx.state.user
+    // const { id: teacherId } = ctx.state.user
+    const { id: teacher } = ctx.state.user
     const { pageNum, pageSize } = ctx.query
     const offset = (pageNum - 1) * pageSize
     const repository = getManager().getRepository(Equipment)
-    const total = await repository.count({ teacherId })
+    const total = await repository.count({ teacher })
+    // const total = await repository.count({ teacherId })
     const lists = await repository.createQueryBuilder('equipment')
       .leftJoinAndSelect(Student, 'stu', 'stu.id = equipment.recipient')
-      .where({ teacherId })
+      // .where({ teacherId })
+      .where({ teacher })
       .select([
       'equipment.id as id',
       'equipment.serialNumber as serialNumber',

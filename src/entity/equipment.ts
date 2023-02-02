@@ -1,5 +1,6 @@
 import { IEquipmentState } from "../libs/model"
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Teacher } from "./teacher"
 
 @Entity()
 export class Equipment {
@@ -7,7 +8,8 @@ export class Equipment {
   id: string
 
   @Column({
-    length: 50
+    length: 50,
+    unique: true
   })
   serialNumber: string
 
@@ -66,6 +68,6 @@ export class Equipment {
   @CreateDateColumn()
   createdTime: Date
 
-  @Column()
-  teacherId: string
+  @ManyToOne((type) => Teacher, (teacher) => teacher.equipments, { eager: true })
+  teacher: Teacher
 }

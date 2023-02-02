@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
-
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from "typeorm"
+import { Equipment } from "./equipment"
+import { Student } from "./student"
 @Entity()
 export class Teacher {
   @PrimaryGeneratedColumn("uuid")
@@ -39,5 +40,11 @@ export class Teacher {
   avatar: string
 
   @CreateDateColumn()
-  createdTime: Date;
+  createdTime: Date
+
+  @OneToMany((type) => Equipment, (equipment) => equipment.teacher)
+  equipments: Equipment[]
+
+  @OneToMany((type) => Student, (student) => student.teacher)
+  students: Student[]
 }

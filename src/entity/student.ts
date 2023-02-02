@@ -1,9 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm"
+import { DeviceApply } from "./device_apply"
+import { Teacher } from "./teacher"
 
 @Entity()
 export class Student {
   @PrimaryGeneratedColumn("uuid")
-  id: number
+  id: string
 
   @Column({
     length: 20,
@@ -40,9 +42,13 @@ export class Student {
   })
   avatar: string
 
-  @Column()
-  teacherId: string
-
   @CreateDateColumn()
   createdTime: Date
+
+  @ManyToOne((type) => Teacher, (teacher) => teacher.students, { eager: true })
+  @JoinColumn({name: 'teacherId'})
+  teacher: Teacher
+
+  @OneToMany((type) => DeviceApply, (deviceApply) => deviceApply.student)
+  deviceApplys: DeviceApply[]
 }

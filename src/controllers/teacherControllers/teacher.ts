@@ -12,11 +12,13 @@ export default class TeacherController {
   public static async createStu(ctx: Context) {
     usernameValidator(ctx)
     nameValidator(ctx)
-    const { id: teacherId } = ctx.state.user
+    // const { id: teacherId } = ctx.state.user
+    const { id: teacher } = ctx.state.user
     const userRepository = getManager().getRepository(Student)
     const newUser = new Student()
     const { username, name } = ctx.request.body
-    newUser.teacherId = teacherId
+    // newUser.teacherId = teacherId
+    newUser.teacher = teacher
     newUser.username = username
     newUser.name = name
     newUser.avatar = 'https://pic4.zhimg.com/80/v2-4f8cf572d51e43d9b9f27f2f51f51921_xl.jpg'
@@ -144,9 +146,10 @@ export default class TeacherController {
     const { id } = ctx.state.user
     const offset = (pageNum - 1) * pageSize
     const repository = getManager().getRepository(Student)
-    const total = await repository.count({ teacherId: id })
+    // const total = await repository.count({ teacherId: id })
+    const total = await repository.count({ teacher: id })
     const students = await repository.createQueryBuilder()
-      .where({ teacherId: id })
+      .where({ teacher: id })
       .orderBy('createdTime', 'DESC')
       .offset(offset)
       .limit(pageSize * 1)
