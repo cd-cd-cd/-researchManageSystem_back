@@ -1,5 +1,6 @@
 import Router from "@koa/router"
 import ManagerController from "./controllers/manager"
+import StudentController from "./controllers/studentControllers/student"
 import DeviceController from "./controllers/teacherControllers/device"
 import TeacherController from "./controllers/teacherControllers/teacher"
 import UserController from "./controllers/user"
@@ -19,7 +20,9 @@ protectedRouter.get('/user', UserController.showUserDetail)
 /*
 student.ts
  */
-
+/*个人信息 */
+// 学生修改个人信息
+protectedRouter.put('/student/updateInfo', StudentController.updatePersonalInfo)
 
 /*
 teacher.ts
