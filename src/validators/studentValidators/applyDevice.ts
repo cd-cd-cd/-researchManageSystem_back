@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 
 const applyDeviceValidator = (ctx: Context) => {
-  ctx.validateBody('serialNumber')
+  ctx.validateBody('equipmentId')
   .required('设备不为空')
   
   ctx.validateBody('reason')
@@ -12,4 +12,8 @@ const applyDeviceValidator = (ctx: Context) => {
 
   ctx.validateBody('endTime')
   .required('结束时间不为空')
+}
+
+export {
+  applyDeviceValidator
 }

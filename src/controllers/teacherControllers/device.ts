@@ -6,6 +6,7 @@ import dayjs from "dayjs"
 import { getManager } from "typeorm"
 import { Equipment } from "../../entity/equipment"
 import { Student } from "../../entity/student"
+import { DeviceApply } from "../../entity/device_apply"
 export default class DeviceController {
   // 老师添加设备
   public static async addEquipment(ctx: Context) {
@@ -79,19 +80,19 @@ export default class DeviceController {
       // .where({ teacherId })
       .where({ teacher })
       .select([
-      'equipment.id as id',
-      'equipment.serialNumber as serialNumber',
-      'equipment.name as name',
-      'equipment.version as version',
-      'equipment.originalValue as originalValue',
-      'equipment.performanceIndex as performanceIndex',
-      'equipment.address as address',
-      'equipment.state as state',
-      'equipment.warehouseEntryTime as warehouseEntryTime',
-      'stu.name as recipient',
-      'equipment.HostRemarks as HostRemarks',
-      'equipment.remark as remark',
-      'equipment.createdTime as createdTime'
+        'equipment.id as id',
+        'equipment.serialNumber as serialNumber',
+        'equipment.name as name',
+        'equipment.version as version',
+        'equipment.originalValue as originalValue',
+        'equipment.performanceIndex as performanceIndex',
+        'equipment.address as address',
+        'equipment.state as state',
+        'equipment.warehouseEntryTime as warehouseEntryTime',
+        'stu.name as recipient',
+        'equipment.HostRemarks as HostRemarks',
+        'equipment.remark as remark',
+        'equipment.createdTime as createdTime'
       ])
       .orderBy('createdTime', 'DESC')
       .offset(offset)
@@ -133,23 +134,34 @@ export default class DeviceController {
       remark
     } = ctx.request.body
     const repository = getManager().getRepository(Equipment)
-    await repository.update({ id }, {
-      serialNumber,
-      name,
-      version,
-      originalValue,
-      performanceIndex,
-      address,
-      warehouseEntryTime,
-      HostRemarks,
-      remark
-    })
-    ctx.status = 200
-    ctx.body = {
-      status: 10113,
-      data: '',
-      msg: '设备信息修改成功',
-      success: true
+    const isExit = await repository.findOne({ serialNumber })
+    if (!isExit) {
+      await repository.update({ id }, {
+        serialNumber,
+        name,
+        version,
+        originalValue,
+        performanceIndex,
+        address,
+        warehouseEntryTime,
+        HostRemarks,
+        remark
+      })
+      ctx.status = 200
+      ctx.body = {
+        status: 10113,
+        data: '',
+        msg: '设备信息修改成功',
+        success: true
+      }
+    } else {
+      ctx.status = 200
+      ctx.body = {
+        status: 10118,
+        data: '',
+        msg: '设备编号重复',
+        success: false
+      }
     }
   }
 
@@ -173,10 +185,10 @@ export default class DeviceController {
 
   // 老师得到学生们id列表
   public static async getStudentList(ctx: Context) {
-    const { id: teacherId } = ctx.state.user
+    const { id: teacher } = ctx.state.user
     const repository = getManager().getRepository(Student)
     const students = await repository.createQueryBuilder('student')
-      .where({ teacherId })
+      .where({ teacher })
       .select(['student.id', 'student.name', 'student.username'])
       .getMany()
     ctx.status = 200
@@ -190,9 +202,20 @@ export default class DeviceController {
 
   // 选择指派人
   public static async chooseStu(ctx: Context) {
-    const { recipient, serialNumber } = ctx.request.body
+    const { id } = ctx.state.user
+    const { recipient, equipmentId, startTime, endTime } = ctx.request.body
     const repository = getManager().getRepository(Equipment)
-    await repository.update({ serialNumber }, { recipient, state: 1 })
+    await repository.update({ id: equipmentId }, { recipient, state: 1 })
+    const applyRepository = getManager().getRepository(DeviceApply)
+    const apply = new DeviceApply()
+    apply.equipmentId = equipmentId
+    apply.applyState = 0
+    apply.deviceApply_start_Time = startTime
+    apply.deviceApply_end_Time = endTime
+    apply.teacher = id
+    apply.student = recipient
+    await applyRepository.save(apply)
+    // equipment_device 也得更新
     ctx.status = 200
     ctx.body = {
       status: 10116,

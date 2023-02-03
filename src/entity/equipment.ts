@@ -1,6 +1,7 @@
 import { IEquipmentState } from "../libs/model"
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Teacher } from "./teacher"
+import { DeviceApply } from "./device_apply"
 
 @Entity()
 export class Equipment {

@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from "typeorm"
+import { DeviceApply } from "./device_apply"
 import { Equipment } from "./equipment"
 import { Student } from "./student"
 @Entity()
@@ -47,4 +48,7 @@ export class Teacher {
 
   @OneToMany((type) => Student, (student) => student.teacher)
   students: Student[]
+
+  @OneToMany((type) => DeviceApply, (apply) => apply.teacher)
+  deviceApplys: DeviceApply[]
 }

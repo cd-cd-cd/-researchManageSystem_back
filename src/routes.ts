@@ -30,6 +30,8 @@ protectedRouter.put('/student/changePassword', StudentController.changePassword)
 protectedRouter.get('/student/device/getIdleDevice', StuDeviceController.idleDevice)
 // 申请设备
 protectedRouter.post('/student/device/apply', StuDeviceController.applyDevice)
+// 获取申请信息
+protectedRouter.get('/student/device/applyInfo', StuDeviceController.deviceInfo)
 /*
 teacher.ts
  */
