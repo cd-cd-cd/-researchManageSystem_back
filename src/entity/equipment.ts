@@ -1,7 +1,9 @@
 import { IEquipmentState } from "../libs/model"
-import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Teacher } from "./teacher"
 import { DeviceApply } from "./device_apply"
+import { DeviceEntry } from "./device_entry"
+import { DeviceDelivery } from "./device_delivery"
 
 @Entity()
 export class Equipment {
@@ -9,8 +11,7 @@ export class Equipment {
   id: string
 
   @Column({
-    length: 50,
-    unique: true
+    length: 50
   })
   serialNumber: string
 
@@ -71,4 +72,10 @@ export class Equipment {
 
   @ManyToOne((type) => Teacher, (teacher) => teacher.equipments, { eager: true })
   teacher: Teacher
+
+  @OneToOne(() => DeviceEntry, (deviceEntry) => deviceEntry.equipment)
+  deviceEntry: DeviceEntry
+
+  @OneToOne(() => DeviceDelivery, (deviceDelivery) => deviceDelivery.equipment)
+  deviceDelivery: DeviceDelivery
 }

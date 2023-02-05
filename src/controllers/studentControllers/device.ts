@@ -3,7 +3,7 @@ import { Teacher } from '../../entity/teacher'
 import { getManager } from 'typeorm'
 import { Equipment } from '../../entity/equipment'
 import { DeviceApply } from '../../entity/device_apply'
-import { ValidationException } from '../../exceptions'
+import { NotFoundException, ValidationException } from '../../exceptions'
 import bouncer from 'koa-bouncer'
 import { Student } from '../../entity/student'
 import { applyDeviceValidator } from '../../validators/studentValidators/applyDevice'
@@ -87,7 +87,10 @@ export default class StuDeviceController {
   // 学生获取设备信息
   public static async deviceInfo(ctx: Context) {
     const { id } = ctx.state.user
+    const { pageNum, pageSize } = ctx.query
+    const offset = (pageNum - 1) * pageSize
     const repository = getManager().getRepository(DeviceApply)
+    const total = await repository.count({ student: id })
     const applys = await repository
     .createQueryBuilder('apply')
     .leftJoinAndSelect(Equipment, 'equipment', 'apply.equipmentId = equipment.id')
@@ -105,13 +108,40 @@ export default class StuDeviceController {
       'equipment.address as address'
     ])
     .where({ student: id })
+    .orderBy('createdTime', 'DESC')
+    .offset(offset)
+    .limit(pageSize * 1)
     .getRawMany()
     ctx.status = 200
     ctx.body = {
       status: 20010,
-      data: applys,
+      data: {
+        pageNum: +pageNum,
+        pageSize: +pageSize,
+        total,
+        applys
+      },
       msg: '',
       success: true
+    }
+  }
+
+  // 学生取消申请
+  public static async cancelApply(ctx: Context) {
+    const { applyId: id } = ctx.request.body
+    const repository = getManager().getRepository(DeviceApply)
+    const isExit = await repository.findOne({ id })
+    if (!isExit) {
+      throw new NotFoundException('没有该申请，请刷新后重试')
+    } else {
+      await repository.delete({ id })
+      ctx.status = 200
+      ctx.body = {
+        status: 20011,
+        data: '',
+        msg: '取消成功',
+        success: true
+      }
     }
   }
 }

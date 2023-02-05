@@ -32,6 +32,8 @@ protectedRouter.get('/student/device/getIdleDevice', StuDeviceController.idleDev
 protectedRouter.post('/student/device/apply', StuDeviceController.applyDevice)
 // 获取申请信息
 protectedRouter.get('/student/device/applyInfo', StuDeviceController.deviceInfo)
+// 取消申请信息
+protectedRouter.delete('/student/device/cancelApply', StuDeviceController.cancelApply)
 /*
 teacher.ts
  */
@@ -66,6 +68,12 @@ protectedRouter.get('/teacher/decive/getStudentList', DeviceController.getStuden
 protectedRouter.put('/teacher/device/chooseStu', DeviceController.chooseStu)
 // 设备回收
 protectedRouter.put('/teacher/device/recovery', DeviceController.recoveryDevice)
+// 得到申请信息
+protectedRouter.get('/teacher/device/applyInfo', DeviceController.getApplyInfo)
+// 拒绝申请
+protectedRouter.put('/teacher/device/refuseApply', DeviceController.refuseApply)
+// 老师同意申请
+protectedRouter.post('/teacher/device/consent', DeviceController.consentApply)
 /*
 manager.ts
  */

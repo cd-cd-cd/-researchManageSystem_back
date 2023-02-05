@@ -11,6 +11,7 @@ export default class ManagerController {
     const { username, name } = ctx.request.body
     newUser.username = username
     newUser.name = name
+    newUser.avatar = 'https://pic4.zhimg.com/80/v2-4f8cf572d51e43d9b9f27f2f51f51921_xl.jpg'
     const salt = bcrypt.genSaltSync(10)
     newUser.password = bcrypt.hashSync(username.slice(-6), salt)
     const isExit = await repository.findOne({ username: username })

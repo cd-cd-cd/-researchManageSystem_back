@@ -1,8 +1,7 @@
 import { typeIApplyState } from '../libs/model'
-import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Student } from './student'
 import { Teacher } from './teacher'
-import { Equipment } from './equipment'
 
 @Entity()
 export class DeviceApply {

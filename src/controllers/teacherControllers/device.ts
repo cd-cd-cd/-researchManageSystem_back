@@ -7,6 +7,8 @@ import { getManager } from "typeorm"
 import { Equipment } from "../../entity/equipment"
 import { Student } from "../../entity/student"
 import { DeviceApply } from "../../entity/device_apply"
+import { DeviceEntry } from "../../entity/device_entry"
+import { DeviceDelivery } from "../../entity/device_delivery"
 export default class DeviceController {
   // 老师添加设备
   public static async addEquipment(ctx: Context) {
@@ -17,7 +19,6 @@ export default class DeviceController {
         throw new ValidationException(error.message)
       }
     }
-    // const { id: teacherId } = ctx.state.user
     const { id: teacher } = ctx.state.user
     const {
       serialNumber,
@@ -42,12 +43,17 @@ export default class DeviceController {
     equipment.warehouseEntryTime = newTime
     equipment.HostRemarks = HostRemarks
     equipment.remark = remark
-    // equipment.teacherId = teacherId
     equipment.teacher = teacher
     const repository = getManager().getRepository(Equipment)
-    const isExit = await repository.findOne({ serialNumber })
+    const isExit = await repository.createQueryBuilder('equipment')
+      .where({ serialNumber })
+      .andWhere({ teacher })
+      .getRawOne()
     if (!isExit) {
       await repository.save(equipment)
+      const deviceEntry = new DeviceEntry()
+      deviceEntry.equipment = equipment
+      await getManager().getRepository(DeviceEntry).save(deviceEntry)
       ctx.status = 200
       ctx.body = {
         status: 10110,
@@ -121,6 +127,7 @@ export default class DeviceController {
         throw new ValidationException(error.message)
       }
     }
+    const { id: teacher } = ctx.state.user
     const {
       id,
       serialNumber,
@@ -134,7 +141,10 @@ export default class DeviceController {
       remark
     } = ctx.request.body
     const repository = getManager().getRepository(Equipment)
-    const isExit = await repository.findOne({ serialNumber })
+    const isExit = await repository.createQueryBuilder('equipment')
+      .where({ serialNumber })
+      .andWhere({ teacher })
+      .getRawOne()
     if (!isExit) {
       await repository.update({ id }, {
         serialNumber,
@@ -204,18 +214,23 @@ export default class DeviceController {
   public static async chooseStu(ctx: Context) {
     const { id } = ctx.state.user
     const { recipient, equipmentId, startTime, endTime } = ctx.request.body
+
     const repository = getManager().getRepository(Equipment)
     await repository.update({ id: equipmentId }, { recipient, state: 1 })
-    const applyRepository = getManager().getRepository(DeviceApply)
-    const apply = new DeviceApply()
-    apply.equipmentId = equipmentId
-    apply.applyState = 0
-    apply.deviceApply_start_Time = startTime
-    apply.deviceApply_end_Time = endTime
-    apply.teacher = id
-    apply.student = recipient
-    await applyRepository.save(apply)
-    // equipment_device 也得更新
+
+    const delivery = new DeviceDelivery()
+    delivery.equipment = equipmentId
+    delivery.deviceApply_start_Time = startTime
+    delivery.deviceApply_end_Time = endTime
+    // 出库
+    await getManager().getRepository(DeviceDelivery).save(delivery)
+    await getManager().getRepository(DeviceEntry).delete({ equipment: equipmentId })
+    // 拒绝其他申请
+    await getManager().getRepository(DeviceApply).update({ equipmentId }, {
+      applyState: -1,
+      refuseReason: '已指派给他人',
+      teacher: id
+    })
     ctx.status = 200
     ctx.body = {
       status: 10116,
@@ -227,9 +242,15 @@ export default class DeviceController {
 
   // 回收设备
   public static async recoveryDevice(ctx: Context) {
-    const { serialNumber } = ctx.request.body
+    const { equipmentId: id } = ctx.request.body
     const repository = getManager().getRepository(Equipment)
-    await repository.update({ serialNumber }, { recipient: '', state: 0 })
+    await repository.update({ id }, { recipient: '', state: 0 })
+    // 删除出库 -》 入库
+    await getManager().getRepository(DeviceDelivery).delete({ equipment: id })
+    const entry = new DeviceEntry()
+    entry.equipment = id
+    await getManager().getRepository(DeviceEntry).save(entry)
+
     ctx.status = 200
     ctx.body = {
       status: 10117,
@@ -238,4 +259,100 @@ export default class DeviceController {
       success: true
     }
   }
+
+  // 老师获取信息
+  public static async getApplyInfo(ctx: Context) {
+    const { id } = ctx.state.user
+    const repository = getManager().getRepository(DeviceApply)
+    const num = await repository.createQueryBuilder('apply')
+      .where({ teacher: id })
+      .andWhere({ applyState: 0 })
+      .getCount()
+    const applyInfo = await repository.createQueryBuilder('apply')
+      .leftJoinAndSelect(Equipment, 'equipment', 'equipment.id = apply.equipmentId')
+      .leftJoinAndSelect(Student, 'student', 'student.id = apply.student')
+      .select([
+        'apply.id as id',
+        'equipment.id as equipmentId',
+        'equipment.serialNumber as serialNumber',
+        'equipment.name',
+        'apply.applyState as applyState',
+        'apply.deviceApply_start_Time as startTime',
+        'apply.deviceApply_end_Time as endTime',
+        'apply.apply_reason as apply_reason',
+        'apply.createdTime as createdTime',
+        'student.id as studentId',
+        'student.username as username',
+        'student.name as studentName'
+      ])
+      .orderBy('createdTime', 'DESC')
+      .where({ teacher: id })
+      .andWhere({ applyState: 0 })
+      .getRawMany()
+    ctx.status = 200
+    ctx.body = {
+      status: 10120,
+      data: {
+        num,
+        applyInfo
+      },
+      msg: '',
+      success: true
+    }
+  }
+
+  // 老师拒绝申请
+  public static async refuseApply(ctx: Context) {
+    const { id: teacher } = ctx.state.user
+    const { id, reason: refuseReason } = ctx.request.body
+    if (refuseReason.length <= 255) {
+      await getManager().getRepository(DeviceApply).update(
+        { id },
+        {
+          applyState: -1,
+          refuseReason,
+          teacher
+        })
+      ctx.status = 200
+      ctx.body = {
+        status: 10121,
+        msg: '申请已拒绝',
+        data: '',
+        success: true
+      }
+    } else {
+      throw new ValidationException('理由不超过255字')
+    }
+  }
+
+  // 老师同意申请
+  public static async consentApply(ctx: Context) {
+    const { id: teacher } = ctx.state.user
+    const { equipmentId, startTime, endTime, studentId } = ctx.request.body
+    // 申请单状态改变
+    await getManager().getRepository(DeviceApply).update(
+      { equipmentId },
+      {
+        applyState: 1,
+        teacher
+      })
+    // 入库删除
+    await getManager().getRepository(DeviceEntry).delete({ equipment: equipmentId })
+    // 出库添加
+    const delivery = new DeviceDelivery()
+    delivery.equipment = equipmentId
+    delivery.deviceApply_start_Time = startTime
+    delivery.deviceApply_end_Time = endTime
+    await getManager().getRepository(DeviceDelivery).save(delivery)
+    // 设备单领用人改变
+    await getManager().getRepository(Equipment).update({ id: equipmentId}, { recipient: studentId, state: 1 })
+    ctx.status = 200
+    ctx.body = {
+      status: 200,
+      data: '',
+      msg: '同意成功',
+      success: true
+    }
+  }
+
 }
