@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne, JoinColumn, OneToOne, ManyToMany } from "typeorm"
 import { DeviceApply } from "./device_apply"
+import { DeviceDelivery } from "./device_delivery"
 import { Teacher } from "./teacher"
 
 @Entity()

@@ -225,7 +225,7 @@ export default class DeviceController {
     // 出库
     await getManager().getRepository(DeviceDelivery).save(delivery)
     await getManager().getRepository(DeviceEntry).delete({ equipment: equipmentId })
-    // 拒绝其他申请
+    // 拒绝其他申请 
     await getManager().getRepository(DeviceApply).update({ equipmentId }, {
       applyState: -1,
       refuseReason: '已指派给他人',

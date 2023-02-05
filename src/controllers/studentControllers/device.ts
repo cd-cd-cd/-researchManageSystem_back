@@ -7,6 +7,7 @@ import { NotFoundException, ValidationException } from '../../exceptions'
 import bouncer from 'koa-bouncer'
 import { Student } from '../../entity/student'
 import { applyDeviceValidator } from '../../validators/studentValidators/applyDevice'
+import { DeviceDelivery } from '../../entity/device_delivery'
 
 export default class StuDeviceController {
   // 学生申请设备
@@ -142,6 +143,35 @@ export default class StuDeviceController {
         msg: '取消成功',
         success: true
       }
+    }
+  }
+
+  // 学生获得在借信息
+  public static async getLoanInfo(ctx: Context) {
+    const { id: studentId } = ctx.state.user
+    const res = await getManager().getRepository(DeviceDelivery)
+    .createQueryBuilder('delivery')
+    .leftJoinAndSelect(Equipment, 'equipment', 'equipment.id = delivery.equipment')
+    .where('equipment.recipient = :studentId', {studentId})
+    .select([
+      'equipment.id as equipmentId',
+      'equipment.serialNumber as serialNumber',
+      'equipment.name as name',
+      'equipment.version as version',
+      'equipment.performanceIndex as performanceIndex',
+      'equipment.address as address',
+      'equipment.HostRemarks as HostRemarks',
+      'delivery.id as applyId',
+      'delivery.deviceApply_start_Time as startTime',
+      'delivery.deviceApply_end_Time as endTime',
+    ])
+    .getRawMany() 
+    ctx.status = 200
+    ctx.body = {
+      status: 200,
+      data: res,
+      msg: '',
+      success: true
     }
   }
 }

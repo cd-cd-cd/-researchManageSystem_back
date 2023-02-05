@@ -34,6 +34,8 @@ protectedRouter.post('/student/device/apply', StuDeviceController.applyDevice)
 protectedRouter.get('/student/device/applyInfo', StuDeviceController.deviceInfo)
 // 取消申请信息
 protectedRouter.delete('/student/device/cancelApply', StuDeviceController.cancelApply)
+// 获取在借设备
+protectedRouter.get('/student/device/loan', StuDeviceController.getLoanInfo)
 /*
 teacher.ts
  */
