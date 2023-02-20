@@ -59,6 +59,7 @@ export default class MeetingController {
       }
       let urls
       Promise.all(urlsPromise).then(values => {
+        removeFileDir(path.join(__dirname, '../../public/uploads'))
         urls = values
         console.log(urls)
       }).catch(e => {
