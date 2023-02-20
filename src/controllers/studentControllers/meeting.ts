@@ -46,20 +46,24 @@ export default class MeetingController {
     const files = ctx.request.files as any
 
     if (+num === 1) {
-      const url = put(files.file)
+      const url = await put(files.file)
       if (url) {
-        console.log(url)
+        removeFileDir(path.join(__dirname, '../../public/uploads'))
       }
+      console.log(url)
     } else if (+num > 1) {
-      const urls = []
+      const urlsPromise = []
       for (let file of files.file) {
-        const url = put(file)
-        if (url) {
-          urls.push(url)
-        } else {
-          throw new Error('有文件上传异常')
-        }
+        const urlPromise = put(file)
+        urlsPromise.push(urlPromise)
       }
+      let urls
+      Promise.all(urlsPromise).then(values => {
+        urls = values
+        console.log(urls)
+      }).catch(e => {
+        console.log(e)
+      })
     }
     ctx.status = 200
     ctx.body = {
