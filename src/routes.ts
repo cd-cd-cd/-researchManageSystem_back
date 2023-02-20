@@ -1,6 +1,7 @@
 import Router from "@koa/router"
 import ManagerController from "./controllers/manager"
 import StuDeviceController from "./controllers/studentControllers/device"
+import MeetingController from "./controllers/studentControllers/meeting"
 import StudentController from "./controllers/studentControllers/student"
 import DeviceController from "./controllers/teacherControllers/device"
 import TeacherController from "./controllers/teacherControllers/teacher"
@@ -36,6 +37,12 @@ protectedRouter.get('/student/device/applyInfo', StuDeviceController.deviceInfo)
 protectedRouter.delete('/student/device/cancelApply', StuDeviceController.cancelApply)
 // 获取在借设备
 protectedRouter.get('/student/device/loan', StuDeviceController.getLoanInfo)
+
+/*发起会议 */
+// 获得人选
+protectedRouter.get('/meet/participants', MeetingController.getParticipants)
+// 发起会议
+protectedRouter.post('/meet/create', MeetingController.createMeet)
 /*
 teacher.ts
  */

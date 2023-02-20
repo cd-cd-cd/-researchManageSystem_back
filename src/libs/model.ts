@@ -17,9 +17,13 @@ type IEquipmentState = -1 | 0 | 1
 
 // 设备申请状态  0 -- 申请中  1 -- 申请同意 -1 -- 申请被拒绝
 type typeIApplyState = -1 | 0 | 1
+
+// 会议状态 -1 -- 已结束  0 -- 正在进行  1 -- 还未开始 
+type IMeetState = -1 | 0 | 1
 export type {
   IRole,
   IUser,
   IEquipmentState,
-  typeIApplyState
+  typeIApplyState,
+  IMeetState
 }
