@@ -43,6 +43,8 @@ protectedRouter.get('/student/device/loan', StuDeviceController.getLoanInfo)
 protectedRouter.get('/meet/participants', MeetingController.getParticipants)
 // 发起会议
 protectedRouter.post('/meet/create', MeetingController.createMeet)
+// 发起会议（上传资料）
+protectedRouter.post('/meet/material', MeetingController.postMaterial)
 /*
 teacher.ts
  */

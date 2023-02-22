@@ -13,36 +13,6 @@ export class User {
   })
   username: string
 
-  @Column({
-    length: 20,
-  })
-  name: string
-
-  @Column({ select: false })
-  password: string
-
-  @Column({
-    length: 20,
-    nullable: true
-  })
-  phoneNumber: string
-
-  @Column({
-    length: 50,
-    nullable: true
-  })
-  email: string
-
-  @Column({
-    nullable: true
-  })
-  resume: string
-
-  @Column({
-    nullable: true
-  })
-  avatar: string
-
   @CreateDateColumn()
   createdTime: Date;
 }

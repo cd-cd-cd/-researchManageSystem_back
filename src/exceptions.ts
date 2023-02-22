@@ -1,6 +1,7 @@
 export class BaseException extends Error {
   status: number
   message: string
+  success: false
 }
 
 export class NotFoundException extends BaseException {

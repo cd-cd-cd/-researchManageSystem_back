@@ -14,13 +14,11 @@ export class Meeting {
   @Column()
   sponsor: string
 
-  @Column({
-    type: "text"
-  })
+  @Column()
   participants: string
 
   @Column({
-    length: 20
+    length: 50
   })
   address: string
 
@@ -31,14 +29,18 @@ export class Meeting {
   endTime: Date
 
   @Column({
-    length: 100
+    length: 100,
+    nullable: true
   })
   briefContent: string
 
   @Column()
   meetState: IMeetState
 
-  @Column()
+  @Column({
+    nullable: true,
+    type: "text"
+  })
   materials: string
 
   @CreateDateColumn()
