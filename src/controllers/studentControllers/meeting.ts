@@ -9,6 +9,9 @@ import { MeetingValidator } from "../../validators/commonValidators/createMeetin
 import { NotFoundException, ValidationException } from "../../exceptions"
 import bouncer from 'koa-bouncer'
 import { Meeting } from "../../entity/meeting"
+import { MeetingRecord } from "../../entity/meeting_record"
+import { Teacher } from "../../entity/teacher"
+import { User } from "../../entity/user"
 export default class MeetingController {
   // 提供参会人人选
   public static async getParticipants(ctx: Context) {
@@ -36,6 +39,17 @@ export default class MeetingController {
           data: res
         }
       }
+    } else if (role === 1) {
+      const users = await getManager()
+        .getRepository(Student).find({ teacher: id })
+
+      ctx.status = 200
+      ctx.body = {
+        status: 200,
+        success: true,
+        data: users,
+        msg: ''
+      }
     }
   }
 
@@ -53,14 +67,23 @@ export default class MeetingController {
     const repository = getManager().getRepository(Meeting)
     const newObj = new Meeting()
     newObj.title = title
-    newObj.sponsor = id
-    newObj.participants = JSON.stringify(participants)
+    newObj.sponsor = (await getManager().getRepository(User).findOne({ trueId: id }))!
     newObj.address = address
     newObj.startTime = startTime
     newObj.endTime = endTime
     newObj.briefContent = briefContent
     newObj.meetState = 1
     const obj = await repository.save(newObj)
+    for (let participant of participants) {
+      const recordRepository = getManager().getRepository(MeetingRecord)
+      const record = new MeetingRecord()
+      record.meeting = obj
+      const sponsor = await getManager().getRepository(User).findOne({ trueId: id })
+      record.sponsor = sponsor!
+      const participantObj = await getManager().getRepository(User).findOne({ trueId: participant })
+      record.participant = participantObj!
+      await recordRepository.save(record)
+    }
     if (obj) {
       ctx.status = 200
       ctx.body = {
@@ -79,15 +102,14 @@ export default class MeetingController {
     const { num, id } = ctx.query
     const files = ctx.request.files as any
     const repository = getManager().getRepository(Meeting)
-    const updateMatetial = async (id: string, url: string | (string | undefined)[]) => {
-      console.log(url)
-      await repository.update({ id }, { materials: JSON.stringify(url) })
+    const updateMatetial = async (id: string, url: string) => {
+      await repository.update({ id }, { materials: url })
     }
     if (+num === 1) {
       const url = await put(files.file, '/meetings/')
       if (url) {
         removeFileDir(path.join(__dirname, '../../public/uploads'))
-        updateMatetial(id, [url])
+        updateMatetial(id, url)
         ctx.status = 200
         ctx.body = {
           success: true,
@@ -105,7 +127,7 @@ export default class MeetingController {
       Promise.all(urlsPromise).then(values => {
         removeFileDir(path.join(__dirname, '../../public/uploads'))
         const urls = values
-        updateMatetial(id, urls)
+        updateMatetial(id, urls.join(';'))
       })
       ctx.status = 200
       ctx.body = {
@@ -113,6 +135,61 @@ export default class MeetingController {
         status: 200,
         msg: '创建成功',
         data: ''
+      }
+    }
+  }
+
+  // 获取会议
+  public static async getMeetings(ctx: Context) {
+    const { id } = ctx.state.user
+    const { pageNum, pageSize } = ctx.query
+    const offset = (pageNum - 1) * pageSize
+    console.log(offset, typeof offset)
+    const user = await getManager().getRepository(User).findOne({ trueId: id })
+    const meetingIds = await getManager().getRepository(MeetingRecord)
+      .createQueryBuilder('record')
+      .where({ sponsor: user })
+      .orWhere({ participant: user })
+      .select('record.meeting')
+      .getRawMany()
+    if (meetingIds.length) {
+      const toArrays = meetingIds.map(item => item.meetingId)
+      const filterMeetingId = toArrays.filter((id, index, arr) => {
+        return arr.indexOf(id) === index
+      })
+      const meetings = await getManager().getRepository(Meeting)
+        .createQueryBuilder('meeting')
+        .leftJoinAndSelect('meeting.records', 'record')
+        .leftJoinAndSelect('meeting.sponsor', 'sponsor')
+        .leftJoinAndSelect('record.participant', 'participant')
+        .where('meeting.id IN (:...filterMeetingId)', { filterMeetingId })
+        .select('meeting')
+        .addSelect('record')
+        .addSelect('participant')
+        .addSelect('sponsor')
+        .orderBy('meeting.createdTime', 'DESC')
+        .skip(offset)
+        .take(4)
+        .getMany()
+      ctx.status = 200
+      ctx.body = {
+        success: true,
+        status: 200,
+        msg: '',
+        data: {
+          pageNum: +pageNum,
+          pageSize: +pageSize,
+          total: meetingIds.length,
+          meetings
+        }
+      }
+    } else {
+      ctx.status = 200
+      ctx.body = {
+        success: true,
+        status: 200,
+        msg: '',
+        data: []
       }
     }
   }

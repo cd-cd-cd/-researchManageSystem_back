@@ -6,18 +6,17 @@ import { Student } from '../../entity/student'
 import { Teacher } from '../../entity/teacher'
 import bouncer from 'koa-bouncer'
 import { phoneValidator, emailValidator, resumeValidator, usernameValidator, nameValidator, passwordValidator } from '../../validators/info'
+import { User } from '../../entity/user'
 export default class TeacherController {
 
   // 老师创建学生
   public static async createStu(ctx: Context) {
     usernameValidator(ctx)
     nameValidator(ctx)
-    // const { id: teacherId } = ctx.state.user
     const { id: teacher } = ctx.state.user
     const userRepository = getManager().getRepository(Student)
     const newUser = new Student()
     const { username, name } = ctx.request.body
-    // newUser.teacherId = teacherId
     newUser.teacher = teacher
     newUser.username = username
     newUser.name = name
@@ -25,7 +24,13 @@ export default class TeacherController {
     newUser.password = bcrypt.hashSync(username.slice(-6))
     const isExit = await userRepository.findOne({ username: username })
     if (!isExit) {
-      await userRepository.save(newUser)
+      const stu = await userRepository.save(newUser)
+      const user = new User()
+      user.trueId = stu.id
+      user.username = stu.username
+      user.name = stu.name
+      user.role = 0
+      await getManager().getRepository(User).save(user)
       ctx.status = 200
       ctx.body = {
         status: 10004,

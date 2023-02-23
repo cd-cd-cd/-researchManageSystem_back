@@ -45,6 +45,8 @@ protectedRouter.get('/meet/participants', MeetingController.getParticipants)
 protectedRouter.post('/meet/create', MeetingController.createMeet)
 // 发起会议（上传资料）
 protectedRouter.post('/meet/material', MeetingController.postMaterial)
+// 得到会议
+protectedRouter.get('/meet/get', MeetingController.getMeetings)
 /*
 teacher.ts
  */
