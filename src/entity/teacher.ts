@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, OneToOne } from "typeorm"
 import { DeviceApply } from "./device_apply"
 import { Equipment } from "./equipment"
+import { Report } from "./report"
 import { Student } from "./student"
 @Entity()
 export class Teacher {

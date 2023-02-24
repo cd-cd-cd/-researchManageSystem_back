@@ -2,8 +2,10 @@ import Router from "@koa/router"
 import ManagerController from "./controllers/manager"
 import StuDeviceController from "./controllers/studentControllers/device"
 import MeetingController from "./controllers/studentControllers/meeting"
+import StuReportController from "./controllers/studentControllers/report"
 import StudentController from "./controllers/studentControllers/student"
 import DeviceController from "./controllers/teacherControllers/device"
+import teacherReportController from "./controllers/teacherControllers/report"
 import TeacherController from "./controllers/teacherControllers/teacher"
 import UserController from "./controllers/user"
 
@@ -47,6 +49,12 @@ protectedRouter.post('/meet/create', MeetingController.createMeet)
 protectedRouter.post('/meet/material', MeetingController.postMaterial)
 // 得到会议
 protectedRouter.get('/meet/get', MeetingController.getMeetings)
+
+/* 周报 */
+// 上传周报
+protectedRouter.post('/student/report/create', StuReportController.uploadReport)
+// 得到周报记录
+protectedRouter.get('/student/report/record', StuReportController.getReportRecord)
 /*
 teacher.ts
  */
@@ -87,6 +95,10 @@ protectedRouter.get('/teacher/device/applyInfo', DeviceController.getApplyInfo)
 protectedRouter.put('/teacher/device/refuseApply', DeviceController.refuseApply)
 // 老师同意申请
 protectedRouter.post('/teacher/device/consent', DeviceController.consentApply)
+
+/*周报管理*/
+// 得到周报
+protectedRouter.get('/teacher/report/infos', teacherReportController.getReportInfo)
 /*
 manager.ts
  */

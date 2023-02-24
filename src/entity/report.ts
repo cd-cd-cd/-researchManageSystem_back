@@ -1,14 +1,12 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ReportReply } from "./report_reply";
-import { Student } from "./student";
+import { IReportState } from "../libs/model";
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ReportComment } from "./report_comment";
+import { User } from "./user";
 
 @Entity()
 export class Report {
   @PrimaryGeneratedColumn("uuid")
   id: string
-
-  @ManyToOne(() =>Student, (student) => student.reports, { eager: true })
-  student: Student
 
   @Column()
   startTime: Date
@@ -16,11 +14,27 @@ export class Report {
   @Column()
   endTime: Date
 
-  @Column()
+  @Column({
+    type: 'text'
+  })
   text: string
 
-  @OneToMany(() => ReportReply, (report_reply) => report_reply.report)
-  report_reply: ReportReply[]
+  @ManyToOne(() => User, (user) => user.submit_reports, { eager: true })
+  report_submitter: User
+
+  @ManyToOne(() => User, (user) => user.review_reports, { eager: true })
+  report_reviewer: User
+
+  @OneToMany(() => ReportComment, (comment) => comment.report)
+  reportComments: ReportComment[]
+
+  @Column()
+  reportState: IReportState
+
+  @BeforeInsert()
+  updateState() {
+    this.reportState = -1
+  }
 
   @CreateDateColumn()
   createdTime: Date

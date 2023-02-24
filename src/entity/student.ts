@@ -1,7 +1,6 @@
+import { report } from "process"
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne, JoinColumn, OneToOne, ManyToMany } from "typeorm"
 import { DeviceApply } from "./device_apply"
-import { DeviceDelivery } from "./device_delivery"
-import { Report } from "./report"
 import { Teacher } from "./teacher"
 
 @Entity()
@@ -53,7 +52,4 @@ export class Student {
 
   @OneToMany((type) => DeviceApply, (deviceApply) => deviceApply.student)
   deviceApplys: DeviceApply[]
-
-  @OneToOne(() => Report, (report) => report.student)
-  reports: Report[]
 }

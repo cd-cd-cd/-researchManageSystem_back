@@ -20,10 +20,14 @@ type typeIApplyState = -1 | 0 | 1
 
 // 会议状态 -1 -- 已结束  0 -- 正在进行  1 -- 还未开始 
 type IMeetState = -1 | 0 | 1
+
+// 周报状态 -1 -- 未查看     0 --- 查看了但没回复  1 --- 查看了并回复了
+type IReportState = -1 | 0 | 1
 export type {
   IRole,
   IUser,
   IEquipmentState,
   typeIApplyState,
-  IMeetState
+  IMeetState,
+  IReportState
 }
