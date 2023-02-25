@@ -4,6 +4,7 @@ import { Meeting } from "./meeting"
 import { MeetingRecord } from "./meeting_record"
 import { Report } from "./report"
 import { ReportComment } from "./report_comment"
+import { ReportSecondComment } from "./report_second_comment"
 
 @Entity()
 export class User {
@@ -46,4 +47,10 @@ export class User {
 
   @OneToMany(() => Report, (report) => report.report_reviewer)
   review_reports: Report[]
+
+  @OneToMany(() => ReportSecondComment, (secondComment) => secondComment.comment_user)
+  secondReportComment: ReportSecondComment[]
+
+  @OneToMany(() => ReportSecondComment, (secondComment) => secondComment.comment_reply_user)
+  secondReportReplyComment: ReportSecondComment[]
 }

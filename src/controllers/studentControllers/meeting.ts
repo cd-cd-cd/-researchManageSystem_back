@@ -144,7 +144,6 @@ export default class MeetingController {
     const { id } = ctx.state.user
     const { pageNum, pageSize } = ctx.query
     const offset = (pageNum - 1) * pageSize
-    console.log(offset, typeof offset)
     const user = await getManager().getRepository(User).findOne({ trueId: id })
     const meetingIds = await getManager().getRepository(MeetingRecord)
       .createQueryBuilder('record')

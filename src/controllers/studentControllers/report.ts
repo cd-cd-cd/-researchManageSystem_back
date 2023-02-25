@@ -3,6 +3,8 @@ import { Student } from "../../entity/student";
 import { getManager } from "typeorm";
 import { User } from "../../entity/user";
 import { Report } from "../../entity/report";
+import { ReportComment } from "../../entity/report_comment";
+import { ReportSecondComment } from "../../entity/report_second_comment";
 
 export default class StuReportController {
   // 上传
@@ -55,6 +57,49 @@ export default class StuReportController {
     ctx.body = {
       success: true,
       data: reports,
+      msg: ''
+    }
+  }
+
+  // 回复评论
+  public static async replyComment(ctx: Context) {
+    const { id: userId } = ctx.state.user
+    const { firstCommentId, replyUserId, comment } = ctx.request.body
+    const comment_user = await getManager().getRepository(User).findOne({ trueId: userId })
+    const comment_reply_user = await getManager().getRepository(User).findOne({ trueId: replyUserId })
+    const first_comment = await getManager().getRepository(ReportComment).findOne({ id: firstCommentId })
+    if (comment_user && comment_reply_user && first_comment) {
+      const secondObj = new ReportSecondComment()
+      secondObj.first_comment = first_comment
+      secondObj.comment_user = comment_user
+      secondObj.comment_reply_user = comment_reply_user
+      secondObj.secondComment = comment
+      await getManager().getRepository(ReportSecondComment).save(secondObj)
+      ctx.status = 200
+      ctx.body = {
+        success: true,
+        data: '',
+        msg: '回复成功'
+      }
+    }
+  }
+
+  // 得到二级评论
+  public static async getSecondComments(ctx: Context) {
+    const { firstCommentId } = ctx.query
+    const firstComment = await getManager().getRepository(ReportComment)
+    .findOne({ id: firstCommentId })
+    const secondComments = await getManager().getRepository(ReportSecondComment)
+    .createQueryBuilder('secondComment')
+    .leftJoinAndSelect('secondComment.comment_user', 'comment_user')
+    .leftJoinAndSelect('secondComment.comment_reply_user', 'comment_reply_user')
+    .where({ first_comment: firstComment })
+    .getMany()
+
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      data: secondComments,
       msg: ''
     }
   }

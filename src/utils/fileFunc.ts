@@ -19,7 +19,6 @@ export const removeFileDir = (path: string)=>{
 // 上传文件
 export const put = async (file: any, ossSrc: string) => {
       const fileName = dayjs() + file.name
-      console.log(fileName)
       const filePath = path.join(__dirname, '../', `/public/uploads/${file.name}`)
       const result = await client.put(ossSrc + fileName, filePath)
       const { url, res: { status } } = result

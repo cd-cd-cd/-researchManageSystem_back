@@ -55,6 +55,10 @@ protectedRouter.get('/meet/get', MeetingController.getMeetings)
 protectedRouter.post('/student/report/create', StuReportController.uploadReport)
 // 得到周报记录
 protectedRouter.get('/student/report/record', StuReportController.getReportRecord)
+// 回复评论
+protectedRouter.post('/student/report/replyComment', StuReportController.replyComment)
+// 得到二级评论
+protectedRouter.get('/student/report/secondComment', StuReportController.getSecondComments)
 /*
 teacher.ts
  */
@@ -99,6 +103,12 @@ protectedRouter.post('/teacher/device/consent', DeviceController.consentApply)
 /*周报管理*/
 // 得到周报
 protectedRouter.get('/teacher/report/infos', teacherReportController.getReportInfo)
+// 查看周报
+protectedRouter.put('/teacher/report/review', teacherReportController.checkReport)
+// 评论周报
+protectedRouter.post('/teacher/report/comment', teacherReportController.commentReport)
+// 得到某个周报一级评论
+protectedRouter.get('/teacher/report/firstComment', teacherReportController.getFirstReportComment)
 /*
 manager.ts
  */
