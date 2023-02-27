@@ -1,5 +1,7 @@
 import { report } from "process"
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToMany } from "typeorm"
+import { LeaveRequest } from "./leaveRequest"
+import { LeaveRequestCheck } from "./leaveRequest_check"
 import { Meeting } from "./meeting"
 import { MeetingRecord } from "./meeting_record"
 import { Report } from "./report"
@@ -53,4 +55,13 @@ export class User {
 
   @OneToMany(() => ReportSecondComment, (secondComment) => secondComment.comment_reply_user)
   secondReportReplyComment: ReportSecondComment[]
+
+  @OneToMany(() => LeaveRequest, (leaveRequest) => leaveRequest.askForLeavePerson)
+  leaveRequests: LeaveRequest[]
+
+  @OneToMany(() => LeaveRequest, (leaveRequest) => leaveRequest.auditor)
+  checkRequests: LeaveRequest[]
+
+  @OneToMany(() => LeaveRequestCheck, (check) => check.checker)
+  leaveRequestChecks: LeaveRequestCheck[] 
 }

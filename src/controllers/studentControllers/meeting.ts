@@ -168,7 +168,7 @@ export default class MeetingController {
         .addSelect('sponsor')
         .orderBy('meeting.createdTime', 'DESC')
         .skip(offset)
-        .take(4)
+        .take(pageSize)
         .getMany()
       ctx.status = 200
       ctx.body = {

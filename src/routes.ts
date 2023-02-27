@@ -1,10 +1,12 @@
 import Router from "@koa/router"
 import ManagerController from "./controllers/manager"
 import StuDeviceController from "./controllers/studentControllers/device"
+import StuLeaveController from "./controllers/studentControllers/leave"
 import MeetingController from "./controllers/studentControllers/meeting"
 import StuReportController from "./controllers/studentControllers/report"
 import StudentController from "./controllers/studentControllers/student"
 import DeviceController from "./controllers/teacherControllers/device"
+import TeacherLeaveController from "./controllers/teacherControllers/leave"
 import teacherReportController from "./controllers/teacherControllers/report"
 import TeacherController from "./controllers/teacherControllers/teacher"
 import UserController from "./controllers/user"
@@ -59,6 +61,14 @@ protectedRouter.get('/student/report/record', StuReportController.getReportRecor
 protectedRouter.post('/student/report/replyComment', StuReportController.replyComment)
 // 得到二级评论
 protectedRouter.get('/student/report/secondComment', StuReportController.getSecondComments)
+
+/*请假管理 */
+// 上传请假
+protectedRouter.post('/studetnt/leave/postLeaveReques', StuLeaveController.postLeaveRequest)
+// 上传请假资料
+protectedRouter.post('/student/leave/material', StuLeaveController.postLeaveMaterial)
+// 得到请假信息
+protectedRouter.get('/student/leave/getInfo', StuLeaveController.getLeaveRequest)
 /*
 teacher.ts
  */
@@ -109,6 +119,14 @@ protectedRouter.put('/teacher/report/review', teacherReportController.checkRepor
 protectedRouter.post('/teacher/report/comment', teacherReportController.commentReport)
 // 得到某个周报一级评论
 protectedRouter.get('/teacher/report/firstComment', teacherReportController.getFirstReportComment)
+
+/*请假管理 */
+protectedRouter.get('/teacher/leave/getInfo', TeacherLeaveController.getRequestInfo)
+// 拒绝
+protectedRouter.post('/teacher/leave/refuse', TeacherLeaveController.refuseRequest)
+// 同意
+protectedRouter.post('/teacher/leave/consent', TeacherLeaveController.consentRequest)
+
 /*
 manager.ts
  */

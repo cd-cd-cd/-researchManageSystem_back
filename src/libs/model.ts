@@ -23,11 +23,15 @@ type IMeetState = -1 | 0 | 1
 
 // 周报状态 -1 -- 未查看     0 --- 查看了但没回复  1 --- 查看了并回复了
 type IReportState = -1 | 0 | 1
+
+// 请假状态 -1 -- 审核中  0 -- 申请通过 1 -- 申请拒绝
+type IRequestState = -1 | 0 | 1
 export type {
   IRole,
   IUser,
   IEquipmentState,
   typeIApplyState,
   IMeetState,
-  IReportState
+  IReportState,
+  IRequestState
 }
