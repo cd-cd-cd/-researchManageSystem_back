@@ -1,5 +1,6 @@
 import Router from "@koa/router"
 import ManagerController from "./controllers/manager"
+import MReimbursement from "./controllers/managerControllers/reimbursement"
 import StuDeviceController from "./controllers/studentControllers/device"
 import StuLeaveController from "./controllers/studentControllers/leave"
 import MeetingController from "./controllers/studentControllers/meeting"
@@ -7,6 +8,7 @@ import StuReportController from "./controllers/studentControllers/report"
 import StudentController from "./controllers/studentControllers/student"
 import DeviceController from "./controllers/teacherControllers/device"
 import TeacherLeaveController from "./controllers/teacherControllers/leave"
+import UserReimbursement from "./controllers/teacherControllers/reimbursement"
 import teacherReportController from "./controllers/teacherControllers/report"
 import TeacherController from "./controllers/teacherControllers/teacher"
 import UserController from "./controllers/user"
@@ -127,12 +129,28 @@ protectedRouter.post('/teacher/leave/refuse', TeacherLeaveController.refuseReque
 // 同意
 protectedRouter.post('/teacher/leave/consent', TeacherLeaveController.consentRequest)
 
+/*报销 */
+// 基础资料
+protectedRouter.post('/user/reimbursement/basicInfo', UserReimbursement.postBasicInfo)
+// pdf
+protectedRouter.post('/user/reimbursement/pdf', UserReimbursement.postPdf)
+protectedRouter.post('/user/reimbursement/credential', UserReimbursement.postCredential)
+// 得到报销信息
+protectedRouter.get('/user/reimbursement/getInfo', UserReimbursement.getInfo)
+
 /*
 manager.ts
  */
 
 // 管理员创建老师
 protectedRouter.post('/manager/createTeacher', ManagerController.createTeacher)
+
+/*报销 */
+protectedRouter.get('/manager/reimbursement/getInfo', MReimbursement.getInfo)
+// 同意
+protectedRouter.put('/manager/reimbursement/consent', MReimbursement.consent)
+// 拒绝
+protectedRouter.put('/manager/reimbursement/refuse', MReimbursement.refuse)
 
 export {
   unProtectedRouter,

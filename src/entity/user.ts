@@ -4,6 +4,7 @@ import { LeaveRequest } from "./leaveRequest"
 import { LeaveRequestCheck } from "./leaveRequest_check"
 import { Meeting } from "./meeting"
 import { MeetingRecord } from "./meeting_record"
+import { Reimbursement } from "./reimbursement"
 import { Report } from "./report"
 import { ReportComment } from "./report_comment"
 import { ReportSecondComment } from "./report_second_comment"
@@ -64,4 +65,7 @@ export class User {
 
   @OneToMany(() => LeaveRequestCheck, (check) => check.checker)
   leaveRequestChecks: LeaveRequestCheck[] 
+
+  @OneToMany(() => Reimbursement, (reimbursement) => reimbursement.applyUser)
+  reimbursement_applys: Reimbursement[]
 }
