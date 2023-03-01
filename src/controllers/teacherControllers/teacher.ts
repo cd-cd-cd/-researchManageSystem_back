@@ -20,7 +20,7 @@ export default class TeacherController {
     newUser.teacher = teacher
     newUser.username = username
     newUser.name = name
-    newUser.avatar = 'https://pic4.zhimg.com/80/v2-4f8cf572d51e43d9b9f27f2f51f51921_xl.jpg'
+    newUser.avatar = 'https://seach-chendian.oss-cn-hangzhou.aliyuncs.com/avatar/basic.png'
     newUser.password = bcrypt.hashSync(username.slice(-6))
     const isExit = await userRepository.findOne({ username: username })
     if (!isExit) {

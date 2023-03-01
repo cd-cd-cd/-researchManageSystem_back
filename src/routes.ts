@@ -1,5 +1,5 @@
 import Router from "@koa/router"
-import ManagerController from "./controllers/manager"
+import ManagerController from "./controllers/managerControllers/manager"
 import MReimbursement from "./controllers/managerControllers/reimbursement"
 import StuDeviceController from "./controllers/studentControllers/device"
 import StuLeaveController from "./controllers/studentControllers/leave"
@@ -144,7 +144,13 @@ manager.ts
 
 // 管理员创建老师
 protectedRouter.post('/manager/createTeacher', ManagerController.createTeacher)
-
+// 创建学生
+protectedRouter.post('/manager/createStudent', ManagerController.createStudent)
+/*成员信息 */
+protectedRouter.get('/manager/info/getStu', ManagerController.getStudentInfos)
+protectedRouter.get('/manager/info/getTeacher', ManagerController.getTeacherInfos)
+// 得到老师
+protectedRouter.get('/manager/info/getSelect', ManagerController.getTeacher)
 /*报销 */
 protectedRouter.get('/manager/reimbursement/getInfo', MReimbursement.getInfo)
 // 同意
