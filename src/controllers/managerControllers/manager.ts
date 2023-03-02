@@ -203,4 +203,18 @@ export default class ManagerController {
       msg: ''
     }
   }
+
+  // 自己
+  public static async getSelfInfo (ctx: Context) {
+    const { name, username } = ctx.state.user
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      data: {
+        username,
+        name
+      },
+      msg: ''
+    }
+  }
 }

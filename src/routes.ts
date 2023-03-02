@@ -167,6 +167,9 @@ protectedRouter.get('/manager/search/student', ManagerController.searchStudent)
 // 查找老师
 protectedRouter.get('/manager/search/teacher', ManagerController.searchTeacher)
 
+// 得到管理员自己信息
+protectedRouter.get('/manager/self', ManagerController.getSelfInfo)
+
 export {
   unProtectedRouter,
   protectedRouter
