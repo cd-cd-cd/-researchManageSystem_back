@@ -149,4 +149,58 @@ export default class ManagerController {
       msg: ''
     }
   }
+
+  // 初始化学生密码
+  public static async initStu (ctx: Context) {
+    const { id, username } = ctx.request.body
+    await getManager().getRepository(Student).update({ id }, { password: bcrypt.hashSync(username.slice(-6), bcrypt.genSaltSync(10))})
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      data: '',
+      msg: '密码初始化成功'
+    }
+  }
+
+  // 初始化老师密码
+  public static async initTeacher (ctx: Context) {
+    const { id, username } = ctx.request.body
+    await getManager().getRepository(Teacher).update({ id }, { password: bcrypt.hashSync(username.slice(-6), bcrypt.genSaltSync(10))})
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      data: '',
+      msg: '密码初始化成功'
+    }
+  }
+
+  // 查询老师
+  public static async searchTeacher (ctx: Context) {
+    const { info } = ctx.query
+    const teachers = await getManager().getRepository(Teacher)
+    .find({
+      where: [{ name: info }, { username: info }]
+    })
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      data: teachers,
+      msg: ''
+    }
+  }
+
+  // 查询学生
+  public static async searchStudent (ctx: Context) {
+    const { info } = ctx.query
+    const students = await getManager().getRepository(Student)
+    .find({
+      where: [{ name: info }, { username: info }]
+    })
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      data: students,
+      msg: ''
+    }
+  }
 }

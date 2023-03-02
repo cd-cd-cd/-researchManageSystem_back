@@ -158,6 +158,15 @@ protectedRouter.put('/manager/reimbursement/consent', MReimbursement.consent)
 // 拒绝
 protectedRouter.put('/manager/reimbursement/refuse', MReimbursement.refuse)
 
+// 初始化学生密码
+protectedRouter.put('/manager/stu/init', ManagerController.initStu)
+// 初始化老师密码
+protectedRouter.put('/manager/teacher/init', ManagerController.initTeacher)
+// 查找学生
+protectedRouter.get('/manager/search/student', ManagerController.searchStudent)
+// 查找老师
+protectedRouter.get('/manager/search/teacher', ManagerController.searchTeacher)
+
 export {
   unProtectedRouter,
   protectedRouter
