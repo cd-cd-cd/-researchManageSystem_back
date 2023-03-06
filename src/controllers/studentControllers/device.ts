@@ -129,13 +129,15 @@ export default class StuDeviceController {
 
   // 学生取消申请
   public static async cancelApply(ctx: Context) {
-    const { applyId: id } = ctx.request.body
+    const { applyId } = ctx.query
+    console.log(ctx.request.body)
+    console.log(applyId)
     const repository = getManager().getRepository(DeviceApply)
-    const isExit = await repository.findOne({ id })
+    const isExit = await repository.findOne({ id: applyId })
     if (!isExit) {
       throw new NotFoundException('没有该申请，请刷新后重试')
     } else {
-      await repository.delete({ id })
+      await repository.delete({ id: applyId })
       ctx.status = 200
       ctx.body = {
         status: 20011,

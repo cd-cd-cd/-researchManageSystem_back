@@ -1,5 +1,6 @@
 import { report } from "process"
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToMany } from "typeorm"
+import { Equipment } from "./equipment"
 import { LeaveRequest } from "./leaveRequest"
 import { LeaveRequestCheck } from "./leaveRequest_check"
 import { Meeting } from "./meeting"
@@ -29,6 +30,9 @@ export class User {
     length: 20,
   })
   name: string
+
+  @OneToMany(() => Equipment, (equipment) => equipment.recipient)
+  loadDevices: Equipment[]
 
   @OneToMany(() => MeetingRecord, (record) => record.sponsor)
   meetingRecordSponsor: MeetingRecord[]

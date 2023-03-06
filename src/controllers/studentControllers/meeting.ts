@@ -10,7 +10,6 @@ import { NotFoundException, ValidationException } from "../../exceptions"
 import bouncer from 'koa-bouncer'
 import { Meeting } from "../../entity/meeting"
 import { MeetingRecord } from "../../entity/meeting_record"
-import { Teacher } from "../../entity/teacher"
 import { User } from "../../entity/user"
 export default class MeetingController {
   // 提供参会人人选

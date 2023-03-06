@@ -9,10 +9,7 @@ export class Report {
   id: string
 
   @Column()
-  startTime: Date
-
-  @Column()
-  endTime: Date
+  time: string
 
   @Column({
     type: 'text'

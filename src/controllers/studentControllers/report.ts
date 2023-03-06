@@ -10,7 +10,7 @@ export default class StuReportController {
   // 上传
   public static async uploadReport(ctx: Context) {
     const { id } = ctx.state.user
-    const { startTime, endTime, text } = ctx.request.body
+    const { time, text } = ctx.request.body
     const student = await getManager().getRepository(Student)
       .findOne({ id })
     const report_submitter = await getManager().getRepository(User)
@@ -20,8 +20,7 @@ export default class StuReportController {
 
     if (report_submitter && report_reviewer) {
       const obj = new Report()
-      obj.startTime = startTime
-      obj.endTime = endTime
+      obj.time = time
       obj.text = text
       obj.report_reviewer = report_reviewer
       obj.report_submitter = report_submitter

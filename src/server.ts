@@ -9,11 +9,14 @@ import { unProtectedRouter, protectedRouter } from './routes'
 import { createConnection } from 'typeorm'
 import jwt from 'koa-jwt'
 import dayjs from 'dayjs'
+import returnRoll from './utils/pollFunc'
 
 createConnection()
   .then(() => {
     // 初始化 Koa 应用实例
     const app = new Koa()
+
+    returnRoll()
 
     // 注册中间件
     app.use(logger())

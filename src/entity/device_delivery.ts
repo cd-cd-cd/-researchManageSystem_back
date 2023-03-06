@@ -7,7 +7,7 @@ export class DeviceDelivery {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
-  @OneToOne(() => Equipment, (equipment) => equipment.deviceDelivery)
+  @OneToOne(() => Equipment, (equipment) => equipment.deviceDelivery, { eager: true })
   @JoinColumn()
   equipment: Equipment
 
