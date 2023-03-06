@@ -4,9 +4,11 @@ import { emailValidator } from '../..//validators/info'
 import { phoneValidator } from '../..//validators/info'
 import bouncer from 'koa-bouncer'
 import bcrypt from 'bcryptjs'
+import path from 'path'
 import { UnauthorizedException, ValidationException } from '../../exceptions'
 import { getManager } from 'typeorm'
 import { Student } from '../../entity/student'
+import { put, removeFileDir } from "../../utils/fileFunc"
 
 export default class StudentController {
   // 学生修改个人信息
@@ -63,6 +65,29 @@ export default class StudentController {
       }
     } else {
       throw new UnauthorizedException('原密码错误')
+    }
+  }
+
+  // 学术修改头像
+    public static async updateAvatar(ctx: Context) {
+    const { id } = ctx.state.user
+    const files = ctx.request.files as any
+
+    const updateMatetial = async (id: string, url: string) => {
+      await getManager().getRepository(Student).update({ id }, { avatar: url })
+    }
+
+    const url = await put(files.file, '/avatar/')
+    if (url) {
+      removeFileDir(path.join(__dirname, '../../public/uploads'))
+      updateMatetial(id, url)
+      ctx.status = 200
+      ctx.body = {
+        success: true,
+        status: 200,
+        msg: '头像修改成功',
+        data: ''
+      }
     }
   }
 }

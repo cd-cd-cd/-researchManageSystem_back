@@ -1,5 +1,6 @@
 import { Context } from 'koa'
 import { getManager } from 'typeorm'
+import path from 'path'
 import bcrypt from 'bcryptjs'
 import { UnauthorizedException, ValidationException } from '../../exceptions'
 import { Student } from '../../entity/student'
@@ -7,6 +8,7 @@ import { Teacher } from '../../entity/teacher'
 import bouncer from 'koa-bouncer'
 import { phoneValidator, emailValidator, resumeValidator, usernameValidator, nameValidator, passwordValidator } from '../../validators/info'
 import { User } from '../../entity/user'
+import { put, removeFileDir } from "../../utils/fileFunc"
 export default class TeacherController {
 
   // 老师创建学生
@@ -130,17 +132,23 @@ export default class TeacherController {
 
   // 修改头像
   public static async updateAvatar(ctx: Context) {
-    const { avatar, id } = ctx.request.body
-    if (avatar && id) {
-      const repository = getManager().getRepository(Teacher)
-      await repository.update({ id }, { avatar })
-      const user = await repository.findOne({ id })
-      if (user) {
-        ctx.status = 200
-        ctx.body = '头像修改成功'
-      } else {
-        ctx.status = 400
-        ctx.body = '头像修改失败'
+    const { id } = ctx.state.user
+    const files = ctx.request.files as any
+
+    const updateMatetial = async (id: string, url: string) => {
+      await getManager().getRepository(Teacher).update({ id }, { avatar: url })
+    }
+
+    const url = await put(files.file, '/avatar/')
+    if (url) {
+      removeFileDir(path.join(__dirname, '../../public/uploads'))
+      updateMatetial(id, url)
+      ctx.status = 200
+      ctx.body = {
+        success: true,
+        status: 200,
+        msg: '头像修改成功',
+        data: ''
       }
     }
   }
@@ -151,7 +159,6 @@ export default class TeacherController {
     const { id } = ctx.state.user
     const offset = (pageNum - 1) * pageSize
     const repository = getManager().getRepository(Student)
-    // const total = await repository.count({ teacherId: id })
     const total = await repository.count({ teacher: id })
     const students = await repository.createQueryBuilder()
       .where({ teacher: id })

@@ -32,6 +32,7 @@ student.ts
 // 学生修改个人信息
 protectedRouter.put('/student/updateInfo', StudentController.updatePersonalInfo)
 protectedRouter.put('/student/changePassword', StudentController.changePassword)
+protectedRouter.put('/student/avatar', StudentController.updateAvatar)
 /*设备管理 */
 // 得到闲置数据
 protectedRouter.get('/student/device/getIdleDevice', StuDeviceController.idleDevice)

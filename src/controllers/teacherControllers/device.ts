@@ -74,16 +74,13 @@ export default class DeviceController {
 
   // 老师获取设备信息
   public static async equipmentList(ctx: Context) {
-    // const { id: teacherId } = ctx.state.user
     const { id: teacher } = ctx.state.user
     const { pageNum, pageSize } = ctx.query
     const offset = (pageNum - 1) * pageSize
     const repository = getManager().getRepository(Equipment)
     const total = await repository.count({ teacher })
-    // const total = await repository.count({ teacherId })
     const lists = await repository.createQueryBuilder('equipment')
       .leftJoinAndSelect(Student, 'stu', 'stu.id = equipment.recipient')
-      // .where({ teacherId })
       .where({ teacher })
       .select([
         'equipment.id as id',
@@ -144,8 +141,8 @@ export default class DeviceController {
     const isExit = await repository.createQueryBuilder('equipment')
       .where({ serialNumber })
       .andWhere({ teacher })
-      .getRawOne()
-    if (!isExit) {
+      .getOne()
+    if (!isExit || isExit.id === id ) {
       await repository.update({ id }, {
         serialNumber,
         name,
@@ -169,7 +166,7 @@ export default class DeviceController {
       ctx.body = {
         status: 10118,
         data: '',
-        msg: '设备编号重复',
+        msg: '设备编号已存在',
         success: false
       }
     }

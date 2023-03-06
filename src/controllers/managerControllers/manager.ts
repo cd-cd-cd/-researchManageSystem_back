@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 import { Teacher } from '../../entity/teacher'
-import { getManager } from 'typeorm'
+import { getManager, Like } from 'typeorm'
 import bcrypt from 'bcryptjs'
 import { User } from '../../entity/user'
 import { Student } from '../../entity/student'
@@ -176,30 +176,46 @@ export default class ManagerController {
 
   // 查询老师
   public static async searchTeacher (ctx: Context) {
-    const { info } = ctx.query
-    const teachers = await getManager().getRepository(Teacher)
-    .find({
-      where: [{ name: info }, { username: info }]
+    const { info, pageNum, pageSize  } = ctx.query
+    const offset = (pageNum - 1) * pageSize
+    const [infos, total] = await getManager().getRepository(Teacher)
+    .findAndCount({
+      where: [{ name: Like(`%${info}%`) }, { username: Like(`%${info}%`) }],
+      skip: offset,
+      take: pageSize
     })
     ctx.status = 200
     ctx.body = {
       success: true,
-      data: teachers,
+      data: {
+        pageNum: +pageNum,
+        pageSize: +pageSize,
+        total,
+        infos
+      },
       msg: ''
     }
   }
 
   // 查询学生
   public static async searchStudent (ctx: Context) {
-    const { info } = ctx.query
-    const students = await getManager().getRepository(Student)
-    .find({
-      where: [{ name: info }, { username: info }]
+    const { info, pageNum, pageSize } = ctx.query
+    const offset = (pageNum - 1) * pageSize
+    const [infos, total] = await getManager().getRepository(Student)
+    .findAndCount({
+      where: [{ name: Like(`%${info}%`) }, { username: Like(`%${info}%`) }],
+      skip: offset,
+      take: pageSize
     })
     ctx.status = 200
     ctx.body = {
       success: true,
-      data: students,
+      data: {
+        pageNum: +pageNum,
+        pageSize: +pageSize,
+        total,
+        infos
+      },
       msg: ''
     }
   }
