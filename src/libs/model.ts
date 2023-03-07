@@ -29,6 +29,21 @@ type IRequestState = -1 | 0 | 1
 
 // 报销状态 -1 --- 审核中 0 -- 通过  1 -- 拒绝
 type IReimbersementState = -1 | 0 | 1
+
+//excel
+interface IDevice {
+  serialNumber: string
+  name: string
+  version: string
+  originalValue: string
+  performanceIndex: string
+  address: string
+  state: string
+  warehouseEntryTime: string
+  HostRemarks: string
+  remark: string
+  createdTime: string
+}
 export type {
   IRole,
   IUser,
@@ -37,5 +52,6 @@ export type {
   IMeetState,
   IReportState,
   IRequestState,
-  IReimbersementState
+  IReimbersementState,
+  IDevice
 }

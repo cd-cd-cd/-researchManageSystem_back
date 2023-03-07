@@ -6,6 +6,7 @@ import StuLeaveController from "./controllers/studentControllers/leave"
 import MeetingController from "./controllers/studentControllers/meeting"
 import StuReportController from "./controllers/studentControllers/report"
 import StudentController from "./controllers/studentControllers/student"
+import DataController from "./controllers/teacherControllers/dataManage"
 import DeviceController from "./controllers/teacherControllers/device"
 import TeacherLeaveController from "./controllers/teacherControllers/leave"
 import UserReimbursement from "./controllers/teacherControllers/reimbursement"
@@ -138,6 +139,10 @@ protectedRouter.post('/user/reimbursement/pdf', UserReimbursement.postPdf)
 protectedRouter.post('/user/reimbursement/credential', UserReimbursement.postCredential)
 // 得到报销信息
 protectedRouter.get('/user/reimbursement/getInfo', UserReimbursement.getInfo)
+
+/*数据管理 */
+protectedRouter.get('/teacher/data/getStu', DataController.getStudent)
+protectedRouter.post('/teacher/data/excel', DataController.exportExcel)
 
 /*
 manager.ts

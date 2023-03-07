@@ -11,6 +11,12 @@ export class Report {
   @Column()
   time: string
 
+  @Column()
+  startTime: Date
+
+  @Column()
+  endTime: Date
+
   @Column({
     type: 'text'
   })
