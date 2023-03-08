@@ -1,11 +1,8 @@
 import { Context } from "koa";
 import { Student } from "../../entity/student";
-import { Between, getManager, LessThan } from "typeorm";
+import { getManager } from "typeorm";
 import { Teacher } from "../../entity/teacher";
-import { Equipment } from '../../entity/equipment'
-import { deviceExcel } from "../../utils/buildExcel"
-import { IDevice, IEquipmentState } from "../../libs/model";
-import dayjs from "dayjs";
+import { studentMeetingPart, studentReimbursementPart, studentReportPart, studentRequetPart, teacherDevicePart, teacherMeetingPart, teacherReimbursementPart } from "../../utils/handleExcel";
 
 export default class DataController {
   // 得到学生
@@ -29,53 +26,36 @@ export default class DataController {
   // 输出excel
   public static async exportExcel(ctx: Context) {
     const { id } = ctx.state.user
-    const teacher = await getManager().getRepository(Teacher).findOne({ id })
+    // const teacher = await getManager().getRepository(Teacher).findOne({ id })
     const { role, module, studentId, startTime, endTime } = ctx.request.body
     let buffer
     if (role === 1) {
       if (module === 'device') {
-        const deviceInfo = await getManager().getRepository(Equipment)
-          .find({
-            createdTime: Between(startTime, endTime),
-            teacher,
-          })
-        const renderState = (state: IEquipmentState) => {
-          switch (state) {
-            case 0:
-              return '闲置'
-            case -1:
-              return '损坏'
-            case 1:
-              return '在用'
-          }
-        }
-        const info = deviceInfo.reduce((pre: IDevice[], cur) => {
-          pre.push({
-            serialNumber: cur.serialNumber,
-            name: cur.name,
-            version: cur.version,
-            originalValue: cur.originalValue,
-            performanceIndex: cur.performanceIndex,
-            address: cur.address,
-            state: renderState(cur.state),
-            warehouseEntryTime: dayjs(cur.warehouseEntryTime).format('YYYY-MM-DD'),
-            HostRemarks: cur.HostRemarks,
-            remark: cur.remark,
-            createdTime: dayjs(cur.createdTime).format('YYYY-MM-DD')
-          })
-          return pre
-        }, [])
-        buffer = deviceExcel(info)
+        buffer = await teacherDevicePart(id, startTime, endTime)
+      } else if (module === 'meeting') {
+        buffer = await teacherMeetingPart(id, startTime, endTime)
+      } else if (module === 'reimbursement') {
+        buffer = await teacherReimbursementPart(id, startTime, endTime)
+      }
+    } else if (role === 0) {
+      if (module === 'report') {
+        buffer = await studentReportPart(studentId, startTime, endTime)
+      } else if (module === 'meeting') {
+        buffer = await studentMeetingPart(studentId, startTime, endTime)
+      } else if (module === 'reimbursement') {
+        buffer = await studentReimbursementPart(studentId, startTime, endTime)
+      } else if (module === 'request') {
+        buffer = await studentRequetPart(studentId, startTime, endTime)
       }
     }
-        // 设置content-type请求头
-        ctx.set('Content-Type', 'application/vnd.openxmlformats')
+    // 设置content-type请求头
+    ctx.set('Content-Type', 'application/vnd.openxmlformats')
 
-        ctx.status = 200
-        ctx.body = {
-          success: true,
-          data: buffer
-        }
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      data: buffer
+    }
   }
 
 }

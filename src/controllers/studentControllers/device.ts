@@ -130,8 +130,6 @@ export default class StuDeviceController {
   // 学生取消申请
   public static async cancelApply(ctx: Context) {
     const { applyId } = ctx.query
-    console.log(ctx.request.body)
-    console.log(applyId)
     const repository = getManager().getRepository(DeviceApply)
     const isExit = await repository.findOne({ id: applyId })
     if (!isExit) {

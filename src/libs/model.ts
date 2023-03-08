@@ -44,6 +44,45 @@ interface IDevice {
   remark: string
   createdTime: string
 }
+
+interface IMeeting {
+  title: string
+  address: string
+  startTime: string
+  endTime: string
+  briefContent: string
+  createdTime: string
+  participants: string
+  sponsor: string
+}
+
+interface IReimbursement {
+  applyUserName: string
+  affairReason: string
+  amount: string
+  reimbursementState: string
+  createdTime: string
+}
+
+interface IReport {
+  timeRange: string
+  startTime: string
+  endTime: string
+  state: string
+  report_submitter: string
+  report_reviewer: string
+  createTime: string
+}
+
+interface IRquest {
+  startTime: string
+  endTime: string
+  reason: string
+  askForLeavePerson: string
+  auditor: string
+  requestState: string
+  createdTime: string
+}
 export type {
   IRole,
   IUser,
@@ -53,5 +92,9 @@ export type {
   IReportState,
   IRequestState,
   IReimbersementState,
-  IDevice
+  IDevice,
+  IMeeting,
+  IReimbursement,
+  IReport,
+  IRquest
 }

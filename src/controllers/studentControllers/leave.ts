@@ -95,7 +95,6 @@ export default class StuLeaveController {
     const { pageNum, pageSize } = ctx.query
     const offset = (pageNum - 1) * pageSize
     const askForLeavePerson = await getManager().getRepository(User).findOne({ trueId: id })
-    console.log(askForLeavePerson)
     const total = await getManager().getRepository(LeaveRequest).count({ askForLeavePerson })
     const requests = await getManager().getRepository(LeaveRequest)
     .createQueryBuilder('leaveRequest')

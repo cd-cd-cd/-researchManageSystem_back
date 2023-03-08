@@ -19,7 +19,6 @@ const returnRoll = () => {
         pre.push(cur.equipment)
         return pre
       }, [])
-      console.log(tempArr, 'tempArr')
       for (let equipment of tempArr) {
         await getManager().getRepository(Equipment).update({ id: equipment.id }, { recipient: '', state: 0 })
           await getManager().getRepository(DeviceDelivery).delete({ equipment })
