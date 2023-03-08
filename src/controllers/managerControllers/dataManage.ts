@@ -2,31 +2,35 @@ import { Context } from "koa";
 import { Student } from "../../entity/student";
 import { getManager } from "typeorm";
 import { Teacher } from "../../entity/teacher";
-import { studentMeetingPart, studentReimbursementPart, studentReportPart, studentRequetPart, teacherDevicePart, teacherMeetingPart, teacherReimbursementPart } from "../../utils/handleExcel";
+import { studentReportPart, studentMeetingPart, studentReimbursementPart, studentRequetPart, teacherDevicePart, teacherMeetingPart, teacherReimbursementPart } from "../../utils/handleExcel";
 
-export default class DataController {
-  // 得到学生
-  public static async getStudent(ctx: Context) {
-    const { id } = ctx.state.user
-    const teacher = await getManager().getRepository(Teacher).findOne({ id })
-    const students = await getManager().getRepository(Student)
-      .find({
-        where: { teacher },
-        select: ["id", "name", "username"]
-      })
-
+export default class DataManageController {
+  // 得到学生和老师
+  public static async getList(ctx: Context) {
+    const { role } = ctx.query
+    let info
+    if (role === '0') {
+      info = await getManager().getRepository(Student)
+        .find({
+          select: ['id', 'name', 'username']
+        })
+    } else if (role === '1') {
+      info = await getManager().getRepository(Teacher)
+        .find({
+          select: ['id', 'name', 'username']
+        })
+    }
     ctx.status = 200
     ctx.body = {
       success: true,
-      data: students,
+      data: info,
       msg: ''
     }
   }
 
   // 输出excel
   public static async exportExcel(ctx: Context) {
-    const { id } = ctx.state.user
-    const { role, module, studentId, startTime, endTime } = ctx.request.body
+    const { role, module, id, startTime, endTime } = ctx.request.body
     let buffer
     if (role === 1) {
       if (module === 'device') {
@@ -38,13 +42,13 @@ export default class DataController {
       }
     } else if (role === 0) {
       if (module === 'report') {
-        buffer = await studentReportPart(studentId, startTime, endTime)
+        buffer = await studentReportPart(id, startTime, endTime)
       } else if (module === 'meeting') {
-        buffer = await studentMeetingPart(studentId, startTime, endTime)
+        buffer = await studentMeetingPart(id, startTime, endTime)
       } else if (module === 'reimbursement') {
-        buffer = await studentReimbursementPart(studentId, startTime, endTime)
+        buffer = await studentReimbursementPart(id, startTime, endTime)
       } else if (module === 'request') {
-        buffer = await studentRequetPart(studentId, startTime, endTime)
+        buffer = await studentRequetPart(id, startTime, endTime)
       }
     }
     // 设置content-type请求头

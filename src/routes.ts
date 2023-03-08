@@ -1,4 +1,5 @@
 import Router from "@koa/router"
+import DataManageController from "./controllers/managerControllers/dataManage"
 import ManagerController from "./controllers/managerControllers/manager"
 import MReimbursement from "./controllers/managerControllers/reimbursement"
 import StuDeviceController from "./controllers/studentControllers/device"
@@ -175,6 +176,9 @@ protectedRouter.get('/manager/search/teacher', ManagerController.searchTeacher)
 
 // 得到管理员自己信息
 protectedRouter.get('/manager/self', ManagerController.getSelfInfo)
+/* 数据管理 */
+protectedRouter.get('/manager/data/getList', DataManageController.getList)
+protectedRouter.post('/manager/data/excel', DataManageController.exportExcel)
 
 export {
   unProtectedRouter,

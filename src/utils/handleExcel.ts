@@ -3,7 +3,7 @@ import { Between, getManager, LessThan, MoreThan } from "typeorm"
 import { Teacher } from "../entity/teacher"
 import { MeetingRecord } from '../entity/meeting_record'
 import { Meeting } from '../entity/meeting'
-import { IEquipmentState, IMeeting, IMeetState, IRquest, IReimbersementState, IReimbursement, IReport, IRequestState } from "../libs/model"
+import { IEquipmentState, IMeeting, IMeetState, IRquest, IReimbersementState, IReimbursement, IReport, IRequestState, IReportState } from "../libs/model"
 import { IDevice } from "../libs/model"
 import dayjs from "dayjs"
 import { exportExcel } from "./buildExcel"
@@ -167,12 +167,23 @@ export const studentReportPart = async (studentId: string, startTime: Date, endT
     '查阅人',
     '提交时间'
   ]
+
+  const renderState = (state: IReportState) => {
+    switch (state) {
+      case -1:
+        return '未查看'
+      case 0:
+        return '未回复'
+      case 1:
+        return '已回复'
+    }
+  }
   const info = reports.reduce((pre: IReport[], cur) => {
     pre.push({
       timeRange: cur.time,
       startTime: dayjs(cur.startTime).format('YYYY-MM-DD'),
       endTime: dayjs(cur.endTime).format('YYYY-MM-DD'),
-      state: cur.reportState.toString(),
+      state: renderState(cur.reportState),
       report_submitter: cur.report_submitter.name,
       report_reviewer: cur.report_reviewer.name,
       createTime: dayjs(cur.createdTime).format('YYYY-MM-DD')
