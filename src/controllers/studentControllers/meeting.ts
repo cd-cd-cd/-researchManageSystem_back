@@ -71,7 +71,16 @@ export default class MeetingController {
     newObj.startTime = startTime
     newObj.endTime = endTime
     newObj.briefContent = briefContent
-    newObj.meetState = 1
+    const date = dayjs()
+    const end = dayjs(endTime)
+    const start = dayjs(startTime)
+    if (end < date) {
+      newObj.meetState = -1
+    } else if (start < date) {
+      newObj.meetState = 0
+    } else {
+      newObj.meetState = 1
+    }
     const obj = await repository.save(newObj)
     for (let participant of participants) {
       const recordRepository = getManager().getRepository(MeetingRecord)
