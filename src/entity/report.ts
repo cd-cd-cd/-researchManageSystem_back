@@ -22,6 +22,12 @@ export class Report {
   })
   text: string
 
+  @Column({
+    nullable: true,
+    type: 'text'
+  })
+  pdf: string
+
   @ManyToOne(() => User, (user) => user.submit_reports, { eager: true })
   report_submitter: User
 

@@ -60,6 +60,8 @@ protectedRouter.get('/meet/get', MeetingController.getMeetings)
 /* 周报 */
 // 上传周报
 protectedRouter.post('/student/report/create', StuReportController.uploadReport)
+// 上传pdf
+protectedRouter.post('/student/report/pdf', StuReportController.uploadPdf)
 // 得到周报记录
 protectedRouter.get('/student/report/record', StuReportController.getReportRecord)
 // 回复评论

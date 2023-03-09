@@ -165,7 +165,8 @@ export const studentReportPart = async (studentId: string, startTime: Date, endT
     '周报状态',
     '提交人',
     '查阅人',
-    '提交时间'
+    '提交时间',
+    '周报'
   ]
 
   const renderState = (state: IReportState) => {
@@ -186,7 +187,8 @@ export const studentReportPart = async (studentId: string, startTime: Date, endT
       state: renderState(cur.reportState),
       report_submitter: cur.report_submitter.name,
       report_reviewer: cur.report_reviewer.name,
-      createTime: dayjs(cur.createdTime).format('YYYY-MM-DD')
+      createTime: dayjs(cur.createdTime).format('YYYY-MM-DD'),
+      pdf: cur.pdf
     })
     return pre
   }, [])

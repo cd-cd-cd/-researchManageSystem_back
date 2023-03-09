@@ -72,6 +72,7 @@ interface IReport {
   report_submitter: string
   report_reviewer: string
   createTime: string
+  pdf: string
 }
 
 interface IRquest {

@@ -5,6 +5,8 @@ import { User } from "../../entity/user";
 import { Report } from "../../entity/report";
 import { ReportComment } from "../../entity/report_comment";
 import { ReportSecondComment } from "../../entity/report_second_comment";
+import { put, removeFileDir } from "../../utils/fileFunc";
+import path from 'path'
 
 export default class StuReportController {
   // 上传
@@ -31,9 +33,31 @@ export default class StuReportController {
         ctx.status = 200
         ctx.body = {
           msg: '上传成功',
-          data: '',
+          data: res.id,
           success: true
         }
+      }
+    }
+  }
+
+  // 上传pdf
+  public static async uploadPdf(ctx: Context) {
+    const { id } = ctx.query
+    const files = ctx.request.files as any
+    const updateMatetial = async (id: string, url: string) => {
+      await getManager().getRepository(Report).update({ id }, { pdf: url })
+    }
+    const url = await put(files.file, '/report/')
+    console.log(url)
+    if (url) {
+      removeFileDir(path.join(__dirname, '../../public/uploads'))
+      updateMatetial(id, url)
+      ctx.status = 200
+      ctx.body = {
+        success: true,
+        status: 200,
+        msg: '周报提交成功',
+        data: ''
       }
     }
   }
