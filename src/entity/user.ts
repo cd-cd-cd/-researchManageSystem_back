@@ -5,10 +5,12 @@ import { LeaveRequest } from "./leaveRequest"
 import { LeaveRequestCheck } from "./leaveRequest_check"
 import { Meeting } from "./meeting"
 import { MeetingRecord } from "./meeting_record"
+import { Patent } from "./patent"
 import { Reimbursement } from "./reimbursement"
 import { Report } from "./report"
 import { ReportComment } from "./report_comment"
 import { ReportSecondComment } from "./report_second_comment"
+import { Thesis } from "./thesis"
 
 @Entity()
 export class User {
@@ -72,4 +74,10 @@ export class User {
 
   @OneToMany(() => Reimbursement, (reimbursement) => reimbursement.applyUser)
   reimbursement_applys: Reimbursement[]
+
+  @OneToMany(() => Patent, (patent) => patent.applyPatentUser)
+  patents: Patent[]
+
+  @OneToMany(() => Thesis, (thesis) => thesis.applyThesisUser)
+  thesis: Thesis
 }

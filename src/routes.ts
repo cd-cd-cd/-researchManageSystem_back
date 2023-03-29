@@ -5,6 +5,7 @@ import MReimbursement from "./controllers/managerControllers/reimbursement"
 import StuDeviceController from "./controllers/studentControllers/device"
 import StuLeaveController from "./controllers/studentControllers/leave"
 import MeetingController from "./controllers/studentControllers/meeting"
+import StuProductionController from "./controllers/studentControllers/production"
 import StuReportController from "./controllers/studentControllers/report"
 import StudentController from "./controllers/studentControllers/student"
 import DataController from "./controllers/teacherControllers/dataManage"
@@ -76,6 +77,13 @@ protectedRouter.post('/studetnt/leave/postLeaveReques', StuLeaveController.postL
 protectedRouter.post('/student/leave/material', StuLeaveController.postLeaveMaterial)
 // 得到请假信息
 protectedRouter.get('/student/leave/getInfo', StuLeaveController.getLeaveRequest)
+
+/*成果管理 */
+// 提交专利
+protectedRouter.post('/student/production/createPatent', StuProductionController.createPatent)
+protectedRouter.get('/student/production/getPatent', StuProductionController.getPatent)
+// 取消专利申请
+protectedRouter.put('/student/production/cancelPatent', StuProductionController.cancelPatent)
 /*
 teacher.ts
  */

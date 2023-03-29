@@ -30,6 +30,18 @@ type IRequestState = -1 | 0 | 1
 // 报销状态 -1 --- 审核中 0 -- 通过  1 -- 拒绝
 type IReimbersementState = -1 | 0 | 1
 
+// 专利状态 -1未审批 0审批通过 1审批打回
+type IPatentState = -1 | 0 | 1
+
+// 专利申请 0不存在 1存在
+type IPatentExist = 0 | 1
+
+// 论文状态 -1未审批 0审批通过 1审批打回
+type IThesisState = -1 | 0 | 1
+
+// 论文申请 0不存在 1存在
+type IThesisExist = 0 | 1
+
 //excel
 interface IDevice {
   serialNumber: string
@@ -97,5 +109,9 @@ export type {
   IMeeting,
   IReimbursement,
   IReport,
-  IRquest
+  IRquest,
+  IPatentState,
+  IPatentExist,
+  IThesisState,
+  IThesisExist
 }

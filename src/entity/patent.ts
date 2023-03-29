@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { IPatentExist, IPatentState } from "../libs/model";
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "./user";
 
 @Entity()
 export class Patent {
@@ -11,7 +13,7 @@ export class Patent {
   name: string
 
   @Column({
-    length: 12
+    length: 13
   })
   applicationNumber: string
 
@@ -19,7 +21,7 @@ export class Patent {
   applicationDate: Date
 
   @Column({
-    length: 10
+    length: 12
   })
   publicationNumber: string
 
@@ -32,12 +34,12 @@ export class Patent {
   principalClassificationNumber: string
 
   @Column({
-    length: 20
+    length: 100
   })
   patentRight: string
 
   @Column({
-    length: 20
+    length: 100
   })
   inventor: string
 
@@ -45,6 +47,21 @@ export class Patent {
     length: 300
   })
   digest: string
+
+  @ManyToOne(() => User, (user) => user.patents, { eager: true })
+  applyPatentUser: User
+
+  @Column()
+  patentState: IPatentState
+
+  @Column()
+  patentExist: IPatentExist
+
+  @BeforeInsert()
+  updateState() {
+    this.patentState = -1
+    this.patentExist = 1
+  }
 
   @CreateDateColumn()
   createdTime: Date
