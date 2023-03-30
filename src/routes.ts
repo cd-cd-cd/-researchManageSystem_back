@@ -84,6 +84,22 @@ protectedRouter.post('/student/production/createPatent', StuProductionController
 protectedRouter.get('/student/production/getPatent', StuProductionController.getPatent)
 // 取消专利申请
 protectedRouter.put('/student/production/cancelPatent', StuProductionController.cancelPatent)
+// 提交论文
+protectedRouter.post('/student/production/createThesis', StuProductionController.createThesis)
+// 得到论文历史
+protectedRouter.get('/student/production/getThesis', StuProductionController.getThesis)
+// 取消论文申请
+protectedRouter.put('/student/production/cancelThesis', StuProductionController.cancelThesis)
+// 创建著作权
+protectedRouter.post('/student/production/createCopyRight', StuProductionController.createCopyRight)
+// 得到著作权历史
+protectedRouter.get('/student/production/getCopyRight', StuProductionController.getCopyRight)
+// 取消著作权
+protectedRouter.put('/student/production/cancelCopyRight', StuProductionController.cancelCopyRight)
+// 获奖
+protectedRouter.post('/student/production/createWin', StuProductionController.createWin)
+protectedRouter.get('/student/production/createWin', StuProductionController.getWin)
+protectedRouter.put('/student/production/cancelWin', StuProductionController.cancelWin)
 /*
 teacher.ts
  */

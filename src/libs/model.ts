@@ -42,6 +42,14 @@ type IThesisState = -1 | 0 | 1
 // 论文申请 0不存在 1存在
 type IThesisExist = 0 | 1
 
+// 著作权
+type ICopyRightState = -1 | 0 | 1
+type ICopyRightExist = 0 | 1
+
+// 获奖
+type IWinState = -1 | 0 | 1
+type IWinExist = 0 | 1
+
 //excel
 interface IDevice {
   serialNumber: string
@@ -96,6 +104,7 @@ interface IRquest {
   requestState: string
   createdTime: string
 }
+
 export type {
   IRole,
   IUser,
@@ -113,5 +122,9 @@ export type {
   IPatentState,
   IPatentExist,
   IThesisState,
-  IThesisExist
+  IThesisExist,
+  ICopyRightState,
+  ICopyRightExist,
+  IWinState,
+  IWinExist
 }

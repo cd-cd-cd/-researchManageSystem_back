@@ -1,5 +1,5 @@
 import { IThesisExist, IThesisState } from "../libs/model";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user";
 
 @Entity()
@@ -43,6 +43,12 @@ export class Thesis {
 
   @Column()
   thesisExist: IThesisExist
+
+  @BeforeInsert()
+  updateState() {
+    this.thesisState = -1
+    this.thesisExist = 1
+  }
 
   @CreateDateColumn()
   createdTime: Date

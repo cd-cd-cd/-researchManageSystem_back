@@ -1,5 +1,6 @@
 import { report } from "process"
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToMany } from "typeorm"
+import { CopyRight } from "./copyRight"
 import { Equipment } from "./equipment"
 import { LeaveRequest } from "./leaveRequest"
 import { LeaveRequestCheck } from "./leaveRequest_check"
@@ -11,6 +12,7 @@ import { Report } from "./report"
 import { ReportComment } from "./report_comment"
 import { ReportSecondComment } from "./report_second_comment"
 import { Thesis } from "./thesis"
+import { Winning } from "./winning"
 
 @Entity()
 export class User {
@@ -80,4 +82,10 @@ export class User {
 
   @OneToMany(() => Thesis, (thesis) => thesis.applyThesisUser)
   thesis: Thesis
+
+  @OneToMany(() => CopyRight, (copyRight) => copyRight.applyCopyRightUser)
+  copyRight: CopyRight
+
+  @OneToMany(() => Winning, (win) => win.applyWinUser)
+  win: Winning
 }
