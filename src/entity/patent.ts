@@ -1,4 +1,4 @@
-import { IPatentExist, IPatentState } from "../libs/model";
+import { IProductionExist, IProductionState } from "../libs/model";
 import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user";
 
@@ -52,10 +52,10 @@ export class Patent {
   applyPatentUser: User
 
   @Column()
-  patentState: IPatentState
+  patentState: IProductionState
 
   @Column()
-  patentExist: IPatentExist
+  patentExist: IProductionExist
 
   @BeforeInsert()
   updateState() {

@@ -11,6 +11,7 @@ import StudentController from "./controllers/studentControllers/student"
 import DataController from "./controllers/teacherControllers/dataManage"
 import DeviceController from "./controllers/teacherControllers/device"
 import TeacherLeaveController from "./controllers/teacherControllers/leave"
+import TeaProductionController from "./controllers/teacherControllers/production"
 import UserReimbursement from "./controllers/teacherControllers/reimbursement"
 import teacherReportController from "./controllers/teacherControllers/report"
 import TeacherController from "./controllers/teacherControllers/teacher"
@@ -170,6 +171,12 @@ protectedRouter.get('/user/reimbursement/getInfo', UserReimbursement.getInfo)
 /*数据管理 */
 protectedRouter.get('/teacher/data/getStu', DataController.getStudent)
 protectedRouter.post('/teacher/data/excel', DataController.exportExcel)
+
+/*成果管理 */
+protectedRouter.get('/teacher/production/info', TeaProductionController.getInfo)
+// 通过&驳回
+protectedRouter.put('/teacher/production/pass', TeaProductionController.pass)
+protectedRouter.put('/teacher/production/returnAsk', TeaProductionController.returnAsk)
 
 /*
 manager.ts

@@ -1,4 +1,5 @@
-import { IThesisExist, IThesisState } from "../libs/model";
+// import { IThesisExist, IThesisState } from "../libs/model";
+import { IProductionExist, IProductionState } from "../libs/model";
 import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user";
 
@@ -39,10 +40,10 @@ export class Thesis {
   applyThesisUser: User
 
   @Column()
-  thesisState: IThesisState
+  thesisState: IProductionState
 
   @Column()
-  thesisExist: IThesisExist
+  thesisExist: IProductionExist
 
   @BeforeInsert()
   updateState() {

@@ -1,4 +1,4 @@
-import { ICopyRightExist, ICopyRightState } from "../libs/model";
+import { IProductionExist, IProductionState } from "../libs/model";
 import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user";
 
@@ -42,10 +42,10 @@ export class CopyRight {
   applyCopyRightUser: User
 
   @Column()
-  copyRightState: ICopyRightState
+  copyRightState: IProductionState
 
   @Column()
-  copyRightExist: ICopyRightExist
+  copyRightExist: IProductionExist
 
   @BeforeInsert()
   updateState() {

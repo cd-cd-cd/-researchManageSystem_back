@@ -30,25 +30,11 @@ type IRequestState = -1 | 0 | 1
 // 报销状态 -1 --- 审核中 0 -- 通过  1 -- 拒绝
 type IReimbersementState = -1 | 0 | 1
 
-// 专利状态 -1未审批 0审批通过 1审批打回
-type IPatentState = -1 | 0 | 1
-
-// 专利申请 0不存在 1存在
-type IPatentExist = 0 | 1
-
-// 论文状态 -1未审批 0审批通过 1审批打回
-type IThesisState = -1 | 0 | 1
-
-// 论文申请 0不存在 1存在
-type IThesisExist = 0 | 1
-
-// 著作权
-type ICopyRightState = -1 | 0 | 1
-type ICopyRightExist = 0 | 1
-
-// 获奖
-type IWinState = -1 | 0 | 1
-type IWinExist = 0 | 1
+// production 状态/ 
+// 存在状态 -1未审批 0审批通过 1审批打回
+// 0不存在 1存在
+type IProductionState = -1 | 0 | 1
+type IProductionExist = 0 | 1
 
 //excel
 interface IDevice {
@@ -119,12 +105,6 @@ export type {
   IReimbursement,
   IReport,
   IRquest,
-  IPatentState,
-  IPatentExist,
-  IThesisState,
-  IThesisExist,
-  ICopyRightState,
-  ICopyRightExist,
-  IWinState,
-  IWinExist
+  IProductionState,
+  IProductionExist
 }

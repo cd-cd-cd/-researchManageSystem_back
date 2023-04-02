@@ -1,4 +1,4 @@
-import { IWinExist, IWinState } from "../libs/model";
+import { IProductionExist, IProductionState } from "../libs/model";
 import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user";
 
@@ -30,10 +30,10 @@ export class Winning {
   applyWinUser: User
 
   @Column()
-  winState: IWinState
+  winState: IProductionState
 
   @Column()
-  winExist: IWinExist
+  winExist: IProductionExist
 
   @BeforeInsert()
   updateState() {

@@ -47,7 +47,7 @@ export class Student {
   createdTime: Date
 
   @ManyToOne((type) => Teacher, (teacher) => teacher.students, { eager: true })
-  @JoinColumn({name: 'teacherId'})
+  // @JoinColumn({name: 'teacherId'})
   teacher: Teacher
 
   @OneToMany((type) => DeviceApply, (deviceApply) => deviceApply.student)
