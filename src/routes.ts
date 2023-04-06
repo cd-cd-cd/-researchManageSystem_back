@@ -16,6 +16,8 @@ import UserReimbursement from "./controllers/teacherControllers/reimbursement"
 import teacherReportController from "./controllers/teacherControllers/report"
 import TeacherController from "./controllers/teacherControllers/teacher"
 import UserController from "./controllers/user"
+import StuProjectController from "./controllers/studentControllers/project"
+import TeaProjectController from "./controllers/teacherControllers/project"
 
 const unProtectedRouter = new Router()
 /*
@@ -101,6 +103,20 @@ protectedRouter.put('/student/production/cancelCopyRight', StuProductionControll
 protectedRouter.post('/student/production/createWin', StuProductionController.createWin)
 protectedRouter.get('/student/production/createWin', StuProductionController.getWin)
 protectedRouter.put('/student/production/cancelWin', StuProductionController.cancelWin)
+
+/*项目管理 */
+// 得到自己的信息
+protectedRouter.get('/student/project/getSelf', StuProjectController.getSelfName)
+// 得到组内成员信息
+protectedRouter.get('/student/project/stuInfo', StuProjectController.stuInfo)
+protectedRouter.post('/student/project/create', StuProjectController.createProject)
+// 得到信息
+protectedRouter.get('/student/project/getInfo', StuProjectController.getInfo)
+// 更新项目
+protectedRouter.post('/student/project/updateProject', StuProjectController.updateProject)
+// 查看更新信息
+protectedRouter.get('/student/project/historyUpdate', StuProjectController.updateInfo)
+
 /*
 teacher.ts
  */
@@ -177,6 +193,14 @@ protectedRouter.get('/teacher/production/info', TeaProductionController.getInfo)
 // 通过&驳回
 protectedRouter.put('/teacher/production/pass', TeaProductionController.pass)
 protectedRouter.put('/teacher/production/returnAsk', TeaProductionController.returnAsk)
+
+/*项目管理 */
+protectedRouter.get('/teacher/project/getInfo', TeaProjectController.getInfo)
+protectedRouter.put('/teacher/project/pass', TeaProjectController.pass)
+protectedRouter.put('/teacher/project/fail', TeaProjectController.fail)
+// 结项
+protectedRouter.put('/teacher/project/over', TeaProjectController.overProject)
+
 
 /*
 manager.ts

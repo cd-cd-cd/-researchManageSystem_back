@@ -1,5 +1,4 @@
-import { report } from "process"
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToMany } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
 import { CopyRight } from "./copyRight"
 import { Equipment } from "./equipment"
 import { LeaveRequest } from "./leaveRequest"
@@ -13,6 +12,7 @@ import { ReportComment } from "./report_comment"
 import { ReportSecondComment } from "./report_second_comment"
 import { Thesis } from "./thesis"
 import { Winning } from "./winning"
+import { Project } from "./project"
 
 @Entity()
 export class User {
@@ -81,11 +81,17 @@ export class User {
   patents: Patent[]
 
   @OneToMany(() => Thesis, (thesis) => thesis.applyThesisUser)
-  thesis: Thesis
+  thesis: Thesis[]
 
   @OneToMany(() => CopyRight, (copyRight) => copyRight.applyCopyRightUser)
-  copyRight: CopyRight
+  copyRight: CopyRight[]
 
   @OneToMany(() => Winning, (win) => win.applyWinUser)
-  win: Winning
+  win: Winning[]
+
+  @OneToMany(() => Project, (project) => project.manager)
+  projects: Project[]
+
+  @OneToMany(() => Project, (project) => project.teacherManager)
+  teacherProjects: Project
 }

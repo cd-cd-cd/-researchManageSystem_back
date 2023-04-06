@@ -36,6 +36,11 @@ type IReimbersementState = -1 | 0 | 1
 type IProductionState = -1 | 0 | 1
 type IProductionExist = 0 | 1
 
+// -1未审批 0审批通过可进入跟踪 1审批未通过 2已结项
+type IProjectState = -1 | 0 | 1 | 2
+type IProjectExist = 0 | 1
+
+
 //excel
 interface IDevice {
   serialNumber: string
@@ -91,6 +96,67 @@ interface IRquest {
   createdTime: string
 }
 
+interface IThesis {
+  title: string
+  firstAuthor: string
+  publishDate: string
+  publicationName: string
+  signature: string
+  discipline_one: string
+  thesisState: string
+  createdTime: string
+}
+
+interface IPatent {
+  name: string
+  applicationNumber: string
+  applicationDate: string
+  publicationNumber: string
+  openDay: string
+  principalClassificationNumber: string
+  patentRight: string
+  inventor: string
+  digest: string
+  patentState: string
+  createdTime: string
+}
+
+interface ICopyRight {
+  name: string
+  registerNumber: string
+  category: string
+  copyrightOwner: string
+  creationCompletionDate: string
+  firstPublicationDate: string
+  recordDate: string
+  copyRightState: string
+  createdTime: string
+}
+
+interface IWin {
+  name: string
+  awardGrade: string
+  awardLevel: string
+  awardTime: string
+  organizingCommittee: string
+  winState: string
+  createdTime: string
+}
+
+interface IOption {
+  value: string
+  label: string
+}
+
+interface IProject {
+  title: string
+  teacherManager: string
+  projectState: string
+  startTime: string,
+  endTime: string,
+  createdTime: string
+}
+
 export type {
   IRole,
   IUser,
@@ -106,5 +172,13 @@ export type {
   IReport,
   IRquest,
   IProductionState,
-  IProductionExist
+  IProductionExist,
+  IProjectState,
+  IProjectExist,
+  IThesis,
+  IPatent,
+  ICopyRight,
+  IWin,
+  IOption,
+  IProject
 }

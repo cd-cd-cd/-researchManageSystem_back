@@ -48,7 +48,6 @@ export default class StuReportController {
       await getManager().getRepository(Report).update({ id }, { pdf: url })
     }
     const url = await put(files.file, '/report/')
-    console.log(url)
     if (url) {
       removeFileDir(path.join(__dirname, '../../public/uploads'))
       updateMatetial(id, url)

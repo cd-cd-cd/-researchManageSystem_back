@@ -2,7 +2,7 @@ import { Context } from "koa";
 import { Student } from "../../entity/student";
 import { getManager } from "typeorm";
 import { Teacher } from "../../entity/teacher";
-import { studentMeetingPart, studentReimbursementPart, studentReportPart, studentRequetPart, teacherDevicePart, teacherMeetingPart, teacherReimbursementPart } from "../../utils/handleExcel";
+import { studentMeetingPart, studentProductionPart, studentProjectPart, studentReimbursementPart, studentReportPart, studentRequetPart, teacherDevicePart, teacherMeetingPart, teacherReimbursementPart } from "../../utils/handleExcel";
 
 export default class DataController {
   // 得到学生
@@ -45,6 +45,10 @@ export default class DataController {
         buffer = await studentReimbursementPart(studentId, startTime, endTime)
       } else if (module === 'request') {
         buffer = await studentRequetPart(studentId, startTime, endTime)
+      } else if (module === 'production') {
+        buffer = await studentProductionPart(studentId, startTime, endTime)
+      } else if (module === 'project') {
+        buffer = await studentProjectPart(studentId, startTime, endTime)
       }
     }
     // 设置content-type请求头
